@@ -3,139 +3,124 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
-  ChevronLeft, Check, Calendar, MapPin, 
-  CreditCard, Ticket, ShieldCheck, ChevronRight 
+  Calendar, Clock, MapPin, 
+  CreditCard, ChevronRight, ChevronLeft, 
+  CheckCircle2, Star, ShieldCheck, 
+  Smartphone, User, Mail, Home
 } from 'lucide-react';
 import Link from 'next/link';
 
 const steps = [
-  { id: 1, title: 'Package', icon: <Check size={18} /> },
-  { id: 2, title: 'Slot', icon: <Calendar size={18} /> },
-  { id: 3, title: 'Address', icon: <MapPin size={18} /> },
-  { id: 4, title: 'Review', icon: <Ticket size={18} /> },
-  { id: 5, title: 'Payment', icon: <CreditCard size={18} /> },
+  { id: 1, name: 'Service Info', icon: <Home size={20} /> },
+  { id: 2, name: 'Schedule', icon: <Calendar size={20} /> },
+  { id: 3, name: 'Address', icon: <MapPin size={20} /> },
+  { id: 4, name: 'Payment', icon: <CreditCard size={20} /> },
 ];
 
 const BookingPage = () => {
   const [currentStep, setCurrentStep] = useState(1);
-  const [isSuccess, setIsSuccess] = useState(false);
+  const [formData, setFormData] = useState({
+    date: '',
+    time: '',
+    addressType: 'home',
+    paymentMethod: 'razorpay'
+  });
 
-  const nextStep = () => {
-    if (currentStep < 5) setCurrentStep(currentStep + 1);
-    else setIsSuccess(true);
-  };
-
-  const prevStep = () => {
-    if (currentStep > 1) setCurrentStep(currentStep - 1);
-  };
-
-  if (isSuccess) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-slate-50 px-4">
-        <motion.div 
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          className="bg-white p-12 rounded-[50px] shadow-2xl border border-border text-center max-w-md w-full"
-        >
-          <div className="w-24 h-24 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto mb-8">
-            <Check size={48} strokeWidth={3} />
-          </div>
-          <h2 className="text-3xl font-bold mb-4">Booking Confirmed!</h2>
-          <p className="text-muted-foreground mb-8">
-            Your booking #UC9821 has been successfully placed. Our professional will arrive on time.
-          </p>
-          <div className="space-y-4">
-            <Link href="/orders/1" className="block w-full bg-primary text-white py-4 rounded-2xl font-bold hover:bg-primary/90 transition-all shadow-lg shadow-primary/20">
-              Track Order
-            </Link>
-            <Link href="/" className="block w-full bg-slate-100 text-foreground py-4 rounded-2xl font-bold hover:bg-slate-200 transition-all">
-              Go to Homepage
-            </Link>
-          </div>
-        </motion.div>
-      </div>
-    );
-  }
+  const nextStep = () => setCurrentStep(prev => Math.min(prev + 1, steps.length));
+  const prevStep = () => setCurrentStep(prev => Math.max(prev - 1, 1));
 
   return (
-    <div className="bg-slate-50 min-h-screen pb-24">
-      <div className="bg-white border-b border-border sticky top-20 z-30">
-        <div className="container mx-auto px-4 py-6">
-          <div className="flex items-center justify-between max-w-4xl mx-auto">
-            {steps.map((step) => (
-              <div key={step.id} className="flex flex-col items-center gap-2 relative flex-1 last:flex-none">
-                <div className={`w-10 h-10 rounded-full flex items-center justify-center border-2 transition-all duration-500 z-10 ${
-                  currentStep >= step.id 
-                    ? 'bg-primary border-primary text-white' 
-                    : 'bg-white border-border text-muted-foreground'
-                }`}>
-                  {currentStep > step.id ? <Check size={18} /> : step.id}
-                </div>
-                <span className={`text-[10px] md:text-xs font-bold uppercase tracking-widest ${
-                  currentStep >= step.id ? 'text-primary' : 'text-muted-foreground'
-                }`}>
-                  {step.title}
-                </span>
-                {/* Connector Line */}
-                {step.id < 5 && (
-                  <div className={`absolute top-5 left-1/2 w-full h-0.5 -z-0 transition-all duration-1000 ${
-                    currentStep > step.id ? 'bg-primary' : 'bg-slate-100'
-                  }`} />
-                )}
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      <div className="container mx-auto px-4 pt-12">
-        <div className="max-w-4xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-12">
-          {/* Main Flow Content */}
+    <div className="min-h-screen bg-[#f8fafc] pt-24 pb-20">
+      <div className="container mx-auto px-4 max-w-6xl">
+        <div className="grid lg:grid-cols-3 gap-12">
+          {/* Left: Form */}
           <div className="lg:col-span-2">
+            {/* Step Progress */}
+            <div className="flex items-center justify-between mb-12 bg-white p-6 rounded-[30px] shadow-sm border border-slate-100">
+              {steps.map((step, i) => (
+                <div key={step.id} className="flex items-center group">
+                  <div className={`flex flex-col items-center gap-2 transition-all ${
+                    currentStep >= step.id ? 'text-primary' : 'text-slate-400'
+                  }`}>
+                    <div className={`w-12 h-12 rounded-2xl flex items-center justify-center transition-all ${
+                      currentStep >= step.id 
+                        ? 'bg-primary text-white shadow-lg shadow-primary/20 scale-110' 
+                        : 'bg-slate-100'
+                    }`}>
+                      {step.icon}
+                    </div>
+                    <span className="text-[10px] font-bold uppercase tracking-widest">{step.name}</span>
+                  </div>
+                  {i < steps.length - 1 && (
+                    <div className={`w-12 md:w-20 h-1 mx-4 rounded-full transition-all ${
+                      currentStep > step.id ? 'bg-primary' : 'bg-slate-100'
+                    }`} />
+                  )}
+                </div>
+              ))}
+            </div>
+
             <AnimatePresence mode="wait">
               <motion.div
                 key={currentStep}
                 initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -20 }}
-                transition={{ duration: 0.3 }}
-                className="bg-white p-8 md:p-12 rounded-[40px] shadow-xl border border-border min-h-[500px]"
+                className="bg-white rounded-[40px] p-8 md:p-12 shadow-xl border border-slate-100 min-h-[500px] flex flex-col"
               >
                 {currentStep === 1 && (
                   <div className="space-y-8">
-                    <h2 className="text-3xl font-bold">Select a package</h2>
-                    <div className="space-y-4">
-                      {['Basic Cleaning', 'Premium Deep Cleaning', 'Ultra Modern Cleaning'].map((name, i) => (
-                        <div key={i} className="flex items-center justify-between p-6 rounded-3xl border-2 border-slate-100 hover:border-primary transition-all cursor-pointer group">
-                          <div className="flex items-center gap-4">
-                            <div className="w-6 h-6 rounded-full border-2 border-border group-hover:border-primary flex items-center justify-center">
-                              <div className="w-3 h-3 rounded-full bg-primary opacity-0 group-hover:opacity-100 transition-opacity" />
-                            </div>
-                            <span className="font-bold">{name}</span>
-                          </div>
-                          <span className="font-bold text-primary">₹{999 + i * 1000}</span>
-                        </div>
-                      ))}
+                    <div>
+                      <h2 className="text-3xl font-bold mb-2">Confirm Service</h2>
+                      <p className="text-slate-500">You are booking Deep Home Cleaning in New Delhi</p>
+                    </div>
+                    <div className="bg-slate-50 p-6 rounded-3xl border border-dashed border-slate-200">
+                      <div className="flex justify-between items-center mb-4">
+                        <span className="font-bold text-lg">Premium 2 BHK Package</span>
+                        <span className="text-primary font-black text-xl">₹3,499</span>
+                      </div>
+                      <ul className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm text-slate-600">
+                        <li className="flex items-center gap-2"><CheckCircle2 size={16} className="text-green-500" /> All rooms cleaning</li>
+                        <li className="flex items-center gap-2"><CheckCircle2 size={16} className="text-green-500" /> Kitchen deep cleaning</li>
+                        <li className="flex items-center gap-2"><CheckCircle2 size={16} className="text-green-500" /> Bathroom descaling</li>
+                        <li className="flex items-center gap-2"><CheckCircle2 size={16} className="text-green-500" /> Floor scrubbing</li>
+                      </ul>
                     </div>
                   </div>
                 )}
 
                 {currentStep === 2 && (
                   <div className="space-y-8">
-                    <h2 className="text-3xl font-bold">Select a slot</h2>
-                    <div className="grid grid-cols-3 md:grid-cols-7 gap-3">
-                      {[...Array(7)].map((_, i) => (
-                        <div key={i} className={`p-4 rounded-2xl border-2 text-center cursor-pointer transition-all ${i === 0 ? 'border-primary bg-primary/5' : 'border-slate-50'}`}>
-                          <div className="text-[10px] text-muted-foreground uppercase">May</div>
-                          <div className="text-xl font-bold">{15 + i}</div>
-                        </div>
+                    <div>
+                      <h2 className="text-3xl font-bold mb-2">When should we arrive?</h2>
+                      <p className="text-slate-500">Select a date and time slot for your service.</p>
+                    </div>
+                    <div className="grid grid-cols-3 md:grid-cols-4 gap-4">
+                      {['May 15', 'May 16', 'May 17', 'May 18'].map((date) => (
+                        <button
+                          key={date}
+                          onClick={() => setFormData({...formData, date})}
+                          className={`p-4 rounded-2xl border-2 transition-all ${
+                            formData.date === date ? 'border-primary bg-primary/5' : 'border-slate-100 hover:border-primary/50'
+                          }`}
+                        >
+                          <div className="text-sm font-bold">{date}</div>
+                          <div className="text-[10px] uppercase text-slate-400 mt-1">Available</div>
+                        </button>
                       ))}
                     </div>
-                    <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                      {['09:00 AM', '10:00 AM', '12:00 PM', '02:00 PM', '04:00 PM', '06:00 PM'].map((time, i) => (
-                        <div key={i} className={`p-4 rounded-xl border-2 text-center cursor-pointer font-semibold ${i === 1 ? 'border-primary' : 'border-slate-50'}`}>
-                          {time}
-                        </div>
+                    <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mt-8">
+                      {['08:00 AM', '10:00 AM', '02:00 PM', '04:00 PM'].map((time) => (
+                        <button
+                          key={time}
+                          onClick={() => setFormData({...formData, time})}
+                          className={`p-4 rounded-2xl border-2 transition-all flex items-center gap-3 ${
+                            formData.time === time ? 'border-primary bg-primary/5' : 'border-slate-100 hover:border-primary/50'
+                          }`}
+                        >
+                          <Clock size={16} className={formData.time === time ? 'text-primary' : 'text-slate-400'} />
+                          <span className="font-bold text-sm">{time}</span>
+                        </button>
                       ))}
                     </div>
                   </div>
@@ -143,125 +128,105 @@ const BookingPage = () => {
 
                 {currentStep === 3 && (
                   <div className="space-y-8">
-                    <h2 className="text-3xl font-bold">Where should we come?</h2>
+                    <div>
+                      <h2 className="text-3xl font-bold mb-2">Service Address</h2>
+                      <p className="text-slate-500">Where should our professional arrive?</p>
+                    </div>
                     <div className="space-y-4">
-                      <div className="p-6 rounded-3xl border-2 border-primary bg-primary/5 relative">
-                        <div className="flex items-start gap-4">
-                          <MapPin className="text-primary shrink-0 mt-1" />
-                          <div>
-                            <h4 className="font-bold">Home</h4>
-                            <p className="text-sm text-muted-foreground">Plot 42, Green Park, South Delhi, 110016</p>
-                          </div>
-                        </div>
-                        <Check className="absolute top-6 right-6 text-primary" />
+                      <div className="grid grid-cols-2 gap-4">
+                        <button className="flex items-center gap-3 p-6 rounded-3xl border-2 border-primary bg-primary/5 font-bold">
+                          <Home className="text-primary" /> Home
+                        </button>
+                        <button className="flex items-center gap-3 p-6 rounded-3xl border-2 border-slate-100 hover:border-primary/50 font-bold text-slate-500">
+                          <Smartphone /> Office
+                        </button>
                       </div>
-                      <button className="w-full p-6 rounded-3xl border-2 border-dashed border-slate-200 text-muted-foreground hover:text-primary hover:border-primary transition-all font-bold">
-                        + Add New Address
-                      </button>
+                      <div className="space-y-4">
+                        <input type="text" placeholder="House / Flat No." className="w-full p-4 rounded-2xl border border-slate-200 focus:ring-2 focus:ring-primary/20 outline-none" />
+                        <input type="text" placeholder="Landmark (Optional)" className="w-full p-4 rounded-2xl border border-slate-200 focus:ring-2 focus:ring-primary/20 outline-none" />
+                        <div className="p-4 bg-slate-50 rounded-2xl text-xs text-slate-500 flex items-center gap-2">
+                          <MapPin size={14} /> New Delhi, South Delhi, Green Park - 110016
+                        </div>
+                      </div>
                     </div>
                   </div>
                 )}
 
                 {currentStep === 4 && (
-                  <div className="space-y-8">
-                    <h2 className="text-3xl font-bold">Review booking</h2>
-                    <div className="bg-slate-50 rounded-3xl p-8 space-y-6">
-                      <div className="flex justify-between items-center border-b border-slate-200 pb-4">
-                        <span className="text-muted-foreground">Service</span>
-                        <span className="font-bold">Deep Home Cleaning</span>
-                      </div>
-                      <div className="flex justify-between items-center border-b border-slate-200 pb-4">
-                        <span className="text-muted-foreground">Date & Time</span>
-                        <span className="font-bold">May 15, 10:00 AM</span>
-                      </div>
-                      <div className="flex justify-between items-center">
-                        <span className="text-muted-foreground">Address</span>
-                        <span className="font-bold text-right max-w-[200px]">Green Park, South Delhi</span>
-                      </div>
+                  <div className="space-y-8 text-center py-8">
+                    <div className="w-24 h-24 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-6">
+                      <ShieldCheck size={48} className="text-primary" />
                     </div>
-                    <div className="relative">
-                      <input 
-                        type="text" 
-                        placeholder="Apply Promo Code" 
-                        className="w-full p-5 bg-white rounded-2xl border border-border pr-24 focus:ring-2 focus:ring-primary outline-none"
-                      />
-                      <button className="absolute right-2 top-2 bottom-2 px-6 bg-slate-900 text-white rounded-xl text-sm font-bold">
-                        Apply
+                    <div>
+                      <h2 className="text-3xl font-bold mb-2">Secure Payment</h2>
+                      <p className="text-slate-500">Choose your preferred payment method</p>
+                    </div>
+                    <div className="grid gap-4 max-w-md mx-auto">
+                      <button className="flex items-center justify-between p-6 rounded-3xl border-2 border-primary bg-primary/5 font-bold">
+                        <div className="flex items-center gap-4">
+                          <CreditCard className="text-primary" /> Pay via Card/UPI
+                        </div>
+                        <div className="flex gap-1">
+                          <div className="w-6 h-4 bg-slate-200 rounded" />
+                          <div className="w-6 h-4 bg-slate-300 rounded" />
+                        </div>
+                      </button>
+                      <button className="flex items-center justify-between p-6 rounded-3xl border-2 border-slate-100 hover:border-primary/50 font-bold text-slate-500">
+                        <div className="flex items-center gap-4">
+                          <Smartphone /> Cash after service
+                        </div>
                       </button>
                     </div>
                   </div>
                 )}
 
-                {currentStep === 5 && (
-                  <div className="space-y-8">
-                    <h2 className="text-3xl font-bold">Payment Method</h2>
-                    <div className="space-y-4">
-                      {['UPI (PhonePe, Google Pay)', 'Credit / Debit Card', 'Net Banking', 'Cash after service'].map((method, i) => (
-                        <div key={i} className={`p-6 rounded-3xl border-2 flex items-center justify-between cursor-pointer ${i === 0 ? 'border-primary bg-primary/5' : 'border-slate-50'}`}>
-                          <div className="flex items-center gap-4">
-                            <div className={`w-5 h-5 rounded-full border-2 ${i === 0 ? 'border-primary flex items-center justify-center' : 'border-border'}`}>
-                              {i === 0 && <div className="w-2.5 h-2.5 rounded-full bg-primary" />}
-                            </div>
-                            <span className="font-bold">{method}</span>
-                          </div>
-                          <CreditCard className={i === 0 ? 'text-primary' : 'text-slate-300'} />
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
+                <div className="mt-auto pt-12 flex items-center justify-between border-t border-slate-100">
+                  <button 
+                    onClick={prevStep}
+                    disabled={currentStep === 1}
+                    className="flex items-center gap-2 font-bold text-slate-400 hover:text-primary transition-colors disabled:opacity-0"
+                  >
+                    <ChevronLeft size={20} /> Back
+                  </button>
+                  <button 
+                    onClick={nextStep}
+                    className="bg-primary text-white px-10 py-4 rounded-2xl font-bold flex items-center gap-2 hover:bg-primary/90 transition-all shadow-xl shadow-primary/20 active:scale-95"
+                  >
+                    {currentStep === steps.length ? 'Confirm Booking' : 'Next Step'} <ChevronRight size={20} />
+                  </button>
+                </div>
               </motion.div>
             </AnimatePresence>
-
-            <div className="mt-8 flex items-center justify-between">
-              <button 
-                onClick={prevStep}
-                disabled={currentStep === 1}
-                className={`flex items-center gap-2 px-8 py-4 rounded-2xl font-bold transition-all ${
-                  currentStep === 1 ? 'opacity-0' : 'bg-white text-foreground hover:bg-slate-100 border border-border shadow-sm'
-                }`}
-              >
-                <ChevronLeft size={20} /> Back
-              </button>
-              <button 
-                onClick={nextStep}
-                className="flex items-center gap-2 px-12 py-4 bg-primary text-white rounded-2xl font-bold hover:bg-primary/90 transition-all shadow-xl shadow-primary/20"
-              >
-                {currentStep === 5 ? 'Pay Now' : 'Continue'} <ChevronRight size={20} />
-              </button>
-            </div>
           </div>
 
-          {/* Sidebar Summary */}
+          {/* Right: Summary */}
           <div className="space-y-6">
-            <div className="bg-white rounded-[40px] border border-border p-8 shadow-xl">
-              <h3 className="text-lg font-bold mb-6">Price Summary</h3>
-              <div className="space-y-4">
-                <div className="flex justify-between text-sm text-muted-foreground">
-                  <span>Item Total</span>
-                  <span>₹2,499</span>
+            <div className="bg-white rounded-[40px] p-8 shadow-xl border border-slate-100 sticky top-24">
+              <h3 className="text-xl font-bold mb-8">Payment Summary</h3>
+              <div className="space-y-6">
+                <div className="flex justify-between items-center text-sm">
+                  <span className="text-slate-500">Item Total</span>
+                  <span className="font-bold">₹3,499</span>
                 </div>
-                <div className="flex justify-between text-sm text-muted-foreground">
-                  <span>Taxes & Fee</span>
-                  <span>₹120</span>
+                <div className="flex justify-between items-center text-sm">
+                  <span className="text-slate-500">Conveyance Fee</span>
+                  <span className="font-bold text-green-600">FREE</span>
                 </div>
-                <div className="flex justify-between text-sm text-green-600 font-medium">
-                  <span>Discount</span>
-                  <span>-₹500</span>
+                <div className="flex justify-between items-center text-sm">
+                  <span className="text-slate-500">Platform Fee</span>
+                  <span className="font-bold">₹49</span>
                 </div>
-                <div className="pt-4 border-t border-slate-100 flex justify-between items-center">
-                  <span className="font-bold">Total Payable</span>
-                  <span className="text-2xl font-black">₹2,119</span>
+                <div className="h-px bg-slate-100" />
+                <div className="flex justify-between items-center">
+                  <span className="text-lg font-bold">Amount Payable</span>
+                  <span className="text-2xl font-black text-primary">₹3,548</span>
                 </div>
               </div>
-            </div>
 
-            <div className="bg-green-50 border border-green-100 rounded-3xl p-6 flex items-start gap-4">
-              <ShieldCheck className="text-green-600 shrink-0" size={24} />
-              <div>
-                <h4 className="text-sm font-bold text-green-900">Safety First</h4>
-                <p className="text-xs text-green-700 leading-relaxed mt-1">
-                  Our pros follow strict safety protocols. Mask and temperature checks are mandatory.
+              <div className="mt-8 p-4 bg-green-50 rounded-2xl flex items-start gap-3">
+                <ShieldCheck className="text-green-600 shrink-0 mt-0.5" size={18} />
+                <p className="text-[10px] text-green-700 font-medium leading-relaxed">
+                  UC Promise: Background verified professionals with high quality standards. Free insurance up to ₹10,000 included.
                 </p>
               </div>
             </div>
