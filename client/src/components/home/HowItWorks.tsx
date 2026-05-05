@@ -1,4 +1,7 @@
+'use client';
+
 import React from 'react';
+import { motion } from 'framer-motion';
 
 const steps = [
   {
@@ -23,35 +26,42 @@ const steps = [
 
 const HowItWorks = () => {
   return (
-    <section className="py-24 bg-white overflow-hidden">
-      <div className="container mx-auto px-4">
-        <div className="text-center mb-20">
-          <h2 className="text-4xl font-bold mb-4">How it works</h2>
-          <p className="text-muted-foreground max-w-2xl mx-auto">
-            Booking a professional service has never been easier. Just three simple steps to a better home.
+    <section className="py-32 bg-white overflow-hidden">
+      <div className="container mx-auto px-4 md:px-6">
+        <div className="text-center mb-24">
+          <span className="text-primary font-black uppercase tracking-[0.3em] text-[11px] mb-6 block">The Process</span>
+          <h2 className="text-5xl md:text-6xl font-black text-slate-900 mb-6">Simple 3-Step Booking.</h2>
+          <p className="text-xl text-slate-500 font-bold max-w-2xl mx-auto leading-relaxed">
+            We've streamlined the way you book home services. Fast, efficient, and 100% transparent.
           </p>
         </div>
 
         <div className="relative">
-          {/* Connecting Line (Desktop) */}
-          <div className="hidden lg:block absolute top-1/2 left-1/4 right-1/4 h-0.5 bg-dashed bg-slate-200 -translate-y-1/2 z-0" />
+          {/* Decorative Background Elements */}
+          <div className="absolute top-1/2 left-0 w-full h-1 bg-slate-100 -translate-y-1/2 hidden lg:block" />
           
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-16 relative z-10">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-20 relative z-10">
             {steps.map((step, index) => (
-              <div key={index} className="flex flex-col items-center text-center group">
-                <div className="relative mb-8">
-                  <div className="w-40 h-40 bg-slate-50 rounded-full flex items-center justify-center border-2 border-dashed border-slate-200 group-hover:border-primary transition-colors group-hover:scale-105 duration-500">
-                    <img src={step.image} alt={step.title} className="w-20 h-20 grayscale group-hover:grayscale-0 transition-all duration-500" />
+              <motion.div 
+                key={index} 
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ delay: index * 0.2 }}
+                className="flex flex-col items-center text-center group"
+              >
+                <div className="relative mb-12">
+                  <div className="w-52 h-52 bg-white rounded-[60px] flex items-center justify-center border-4 border-slate-100 group-hover:border-primary transition-all duration-700 shadow-2xl shadow-slate-900/5 group-hover:scale-110 group-hover:rotate-6">
+                    <img src={step.image} alt={step.title} className="w-24 h-24 grayscale group-hover:grayscale-0 transition-all duration-700" />
                   </div>
-                  <div className="absolute top-0 right-0 w-12 h-12 bg-primary text-white rounded-full flex items-center justify-center font-bold shadow-lg">
+                  <div className="absolute -top-4 -right-4 w-16 h-16 bg-slate-900 text-white rounded-3xl flex items-center justify-center font-black text-xl shadow-2xl group-hover:bg-primary transition-colors">
                     {step.number}
                   </div>
                 </div>
-                <h3 className="text-xl font-bold mb-3 group-hover:text-primary transition-colors">{step.title}</h3>
-                <p className="text-muted-foreground text-sm leading-relaxed max-w-[280px]">
+                <h3 className="text-3xl font-black mb-4 text-slate-900 group-hover:text-primary transition-colors">{step.title}</h3>
+                <p className="text-slate-500 font-bold leading-relaxed max-w-[300px]">
                   {step.desc}
                 </p>
-              </div>
+              </motion.div>
             ))}
           </div>
         </div>
