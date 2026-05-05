@@ -16,6 +16,9 @@ const Header = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  const [isCityOpen, setIsCityOpen] = useState(false);
+  const [selectedCity, setSelectedCity] = useState('New Delhi');
+
   return (
     <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
       isScrolled ? 'bg-white/80 backdrop-blur-md shadow-sm py-3' : 'bg-transparent py-5'
@@ -26,15 +29,29 @@ const Header = () => {
             URBAN<span className="text-foreground">CLONE</span>
           </Link>
           
-          <div className="hidden md:flex items-center gap-4 bg-white shadow-sm border border-border rounded-lg px-4 py-2 w-[400px]">
-            <CitySelector />
+          <div className="hidden md:flex items-center gap-4 bg-white shadow-sm border border-border rounded-[20px] px-4 py-2 w-[400px]">
+            <button 
+              onClick={() => setIsCityOpen(true)}
+              className="flex items-center gap-2 text-sm font-bold hover:text-primary transition-colors shrink-0"
+            >
+              <MapPin size={18} className="text-primary" />
+              {selectedCity}
+            </button>
+            <CitySelector 
+              isOpen={isCityOpen} 
+              onClose={() => setIsCityOpen(false)} 
+              onSelect={(city) => {
+                setSelectedCity(city);
+                setIsCityOpen(false);
+              }} 
+            />
             <div className="w-px h-6 bg-border mx-2" />
             <div className="flex items-center gap-2 flex-1">
               <Search size={18} className="text-muted-foreground" />
               <input 
                 type="text" 
                 placeholder="Search for services..." 
-                className="bg-transparent border-none outline-none text-sm w-full"
+                className="bg-transparent border-none outline-none text-sm w-full font-medium"
               />
             </div>
           </div>
