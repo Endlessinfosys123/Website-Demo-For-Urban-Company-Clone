@@ -180,7 +180,14 @@ const HeroSection = () => {
         </div>
       </div>
 
-      <CitySelector isOpen={isCityOpen} onClose={() => setIsCityOpen(false)} onSelect={(city) => {setSelectedCity(city); setIsCityOpen(false);}} />
+      <CitySelector 
+        isOpen={isCityOpen} 
+        onClose={() => setIsCityOpen(false)} 
+        onSelect={(city: string) => {
+          setSelectedCity(city);
+          setIsCityOpen(false);
+        }} 
+      />
     </section>
   );
 };

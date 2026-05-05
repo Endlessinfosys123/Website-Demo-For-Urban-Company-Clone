@@ -219,7 +219,7 @@ const HomePage = () => {
 
       <HowItWorks />
       <TrustBadges />
-    </div>
+    </main>
   );
 };
 
