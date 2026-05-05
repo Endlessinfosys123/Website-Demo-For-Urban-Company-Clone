@@ -2,227 +2,269 @@
 
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Calendar, MapPin, CreditCard, ChevronRight, CheckCircle2, Clock } from 'lucide-react';
+import { 
+  ChevronLeft, Check, Calendar, MapPin, 
+  CreditCard, Ticket, ShieldCheck, ChevronRight 
+} from 'lucide-react';
 import Link from 'next/link';
 
+const steps = [
+  { id: 1, title: 'Package', icon: <Check size={18} /> },
+  { id: 2, title: 'Slot', icon: <Calendar size={18} /> },
+  { id: 3, title: 'Address', icon: <MapPin size={18} /> },
+  { id: 4, title: 'Review', icon: <Ticket size={18} /> },
+  { id: 5, title: 'Payment', icon: <CreditCard size={18} /> },
+];
+
 const BookingPage = () => {
-  const [step, setStep] = useState(1);
-  const [loading, setLoading] = useState(false);
-  const [selectedSlot, setSelectedSlot] = useState('');
-  const [selectedAddress, setSelectedAddress] = useState('');
+  const [currentStep, setCurrentStep] = useState(1);
+  const [isSuccess, setIsSuccess] = useState(false);
 
-  const steps = [
-    { id: 1, name: 'Date & Time', icon: <Calendar size={20} /> },
-    { id: 2, name: 'Address', icon: <MapPin size={20} /> },
-    { id: 3, name: 'Payment', icon: <CreditCard size={20} /> },
-  ];
-
-  const slots = [
-    '09:00 AM', '10:00 AM', '11:00 AM', '12:00 PM', 
-    '02:00 PM', '03:00 PM', '04:00 PM', '05:00 PM'
-  ];
-
-  const addresses = [
-    { id: '1', title: 'Home', address: 'B-402, Skyline Residency, Satellite, Ahmedabad - 380015' },
-    { id: '2', title: 'Office', address: '701, Titanium Square, Thaltej, Ahmedabad - 380054' }
-  ];
-
-  const handleNext = () => {
-    if (step < 3) setStep(step + 1);
-    else handleComplete();
+  const nextStep = () => {
+    if (currentStep < 5) setCurrentStep(currentStep + 1);
+    else setIsSuccess(true);
   };
 
-  const handleComplete = () => {
-    setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
-      setStep(4); // Confirmation
-    }, 2000);
+  const prevStep = () => {
+    if (currentStep > 1) setCurrentStep(currentStep - 1);
   };
+
+  if (isSuccess) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-slate-50 px-4">
+        <motion.div 
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className="bg-white p-12 rounded-[50px] shadow-2xl border border-border text-center max-w-md w-full"
+        >
+          <div className="w-24 h-24 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto mb-8">
+            <Check size={48} strokeWidth={3} />
+          </div>
+          <h2 className="text-3xl font-bold mb-4">Booking Confirmed!</h2>
+          <p className="text-muted-foreground mb-8">
+            Your booking #UC9821 has been successfully placed. Our professional will arrive on time.
+          </p>
+          <div className="space-y-4">
+            <Link href="/orders/1" className="block w-full bg-primary text-white py-4 rounded-2xl font-bold hover:bg-primary/90 transition-all shadow-lg shadow-primary/20">
+              Track Order
+            </Link>
+            <Link href="/" className="block w-full bg-slate-100 text-foreground py-4 rounded-2xl font-bold hover:bg-slate-200 transition-all">
+              Go to Homepage
+            </Link>
+          </div>
+        </motion.div>
+      </div>
+    );
+  }
 
   return (
-    <div className="pt-28 pb-20 bg-slate-50 min-h-screen">
-      <div className="container mx-auto px-4 md:px-6">
-        <div className="max-w-4xl mx-auto">
-          {/* Progress Bar */}
-          {step <= 3 && (
-            <div className="flex items-center justify-between mb-12">
-              {steps.map((s, i) => (
-                <React.Fragment key={s.id}>
-                  <div className="flex flex-col items-center">
-                    <div className={`w-12 h-12 rounded-full flex items-center justify-center transition-all ${
-                      step >= s.id ? 'bg-purple-600 text-white shadow-lg shadow-purple-200' : 'bg-white text-gray-400 border border-gray-200'
-                    }`}>
-                      {s.icon}
-                    </div>
-                    <span className={`text-xs font-bold mt-2 ${step >= s.id ? 'text-purple-600' : 'text-gray-400'}`}>
-                      {s.name}
-                    </span>
-                  </div>
-                  {i < steps.length - 1 && (
-                    <div className={`flex-1 h-0.5 mx-4 mb-6 ${step > s.id ? 'bg-purple-600' : 'bg-gray-200'}`} />
-                  )}
-                </React.Fragment>
-              ))}
-            </div>
-          )}
+    <div className="bg-slate-50 min-h-screen pb-24">
+      <div className="bg-white border-b border-border sticky top-20 z-30">
+        <div className="container mx-auto px-4 py-6">
+          <div className="flex items-center justify-between max-w-4xl mx-auto">
+            {steps.map((step) => (
+              <div key={step.id} className="flex flex-col items-center gap-2 relative flex-1 last:flex-none">
+                <div className={`w-10 h-10 rounded-full flex items-center justify-center border-2 transition-all duration-500 z-10 ${
+                  currentStep >= step.id 
+                    ? 'bg-primary border-primary text-white' 
+                    : 'bg-white border-border text-muted-foreground'
+                }`}>
+                  {currentStep > step.id ? <Check size={18} /> : step.id}
+                </div>
+                <span className={`text-[10px] md:text-xs font-bold uppercase tracking-widest ${
+                  currentStep >= step.id ? 'text-primary' : 'text-muted-foreground'
+                }`}>
+                  {step.title}
+                </span>
+                {/* Connector Line */}
+                {step.id < 5 && (
+                  <div className={`absolute top-5 left-1/2 w-full h-0.5 -z-0 transition-all duration-1000 ${
+                    currentStep > step.id ? 'bg-primary' : 'bg-slate-100'
+                  }`} />
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
 
-          {/* Step Content */}
-          <div className="bg-white rounded-[40px] p-8 md:p-12 shadow-sm border border-gray-100 min-h-[400px] flex flex-col">
+      <div className="container mx-auto px-4 pt-12">
+        <div className="max-w-4xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-12">
+          {/* Main Flow Content */}
+          <div className="lg:col-span-2">
             <AnimatePresence mode="wait">
-              {step === 1 && (
-                <motion.div 
-                  key="step1"
-                  initial={{ opacity: 0, x: 20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: -20 }}
-                  className="space-y-8 flex-1"
-                >
-                  <h2 className="text-2xl font-bold text-gray-900">Select Date & Time</h2>
-                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                    {slots.map((slot) => (
-                      <button
-                        key={slot}
-                        onClick={() => setSelectedSlot(slot)}
-                        className={`p-4 rounded-2xl border-2 transition-all font-bold text-sm ${
-                          selectedSlot === slot 
-                            ? 'border-purple-600 bg-purple-50 text-purple-600' 
-                            : 'border-gray-100 bg-gray-50 text-gray-600 hover:border-purple-200'
-                        }`}
-                      >
-                        {slot}
-                      </button>
-                    ))}
-                  </div>
-                </motion.div>
-              )}
-
-              {step === 2 && (
-                <motion.div 
-                  key="step2"
-                  initial={{ opacity: 0, x: 20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: -20 }}
-                  className="space-y-8 flex-1"
-                >
-                  <div className="flex justify-between items-center">
-                    <h2 className="text-2xl font-bold text-gray-900">Choose Address</h2>
-                    <button className="text-purple-600 font-bold text-sm">+ Add New</button>
-                  </div>
-                  <div className="space-y-4">
-                    {addresses.map((addr) => (
-                      <div 
-                        key={addr.id}
-                        onClick={() => setSelectedAddress(addr.id)}
-                        className={`p-6 rounded-2xl border-2 cursor-pointer transition-all ${
-                          selectedAddress === addr.id 
-                            ? 'border-purple-600 bg-purple-50' 
-                            : 'border-gray-100 bg-gray-50 hover:border-purple-200'
-                        }`}
-                      >
-                        <div className="flex items-start space-x-4">
-                          <div className={`p-2 rounded-lg ${selectedAddress === addr.id ? 'bg-purple-600 text-white' : 'bg-gray-200 text-gray-500'}`}>
-                            <MapPin size={18} />
+              <motion.div
+                key={currentStep}
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -20 }}
+                transition={{ duration: 0.3 }}
+                className="bg-white p-8 md:p-12 rounded-[40px] shadow-xl border border-border min-h-[500px]"
+              >
+                {currentStep === 1 && (
+                  <div className="space-y-8">
+                    <h2 className="text-3xl font-bold">Select a package</h2>
+                    <div className="space-y-4">
+                      {['Basic Cleaning', 'Premium Deep Cleaning', 'Ultra Modern Cleaning'].map((name, i) => (
+                        <div key={i} className="flex items-center justify-between p-6 rounded-3xl border-2 border-slate-100 hover:border-primary transition-all cursor-pointer group">
+                          <div className="flex items-center gap-4">
+                            <div className="w-6 h-6 rounded-full border-2 border-border group-hover:border-primary flex items-center justify-center">
+                              <div className="w-3 h-3 rounded-full bg-primary opacity-0 group-hover:opacity-100 transition-opacity" />
+                            </div>
+                            <span className="font-bold">{name}</span>
                           </div>
+                          <span className="font-bold text-primary">₹{999 + i * 1000}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {currentStep === 2 && (
+                  <div className="space-y-8">
+                    <h2 className="text-3xl font-bold">Select a slot</h2>
+                    <div className="grid grid-cols-3 md:grid-cols-7 gap-3">
+                      {[...Array(7)].map((_, i) => (
+                        <div key={i} className={`p-4 rounded-2xl border-2 text-center cursor-pointer transition-all ${i === 0 ? 'border-primary bg-primary/5' : 'border-slate-50'}`}>
+                          <div className="text-[10px] text-muted-foreground uppercase">May</div>
+                          <div className="text-xl font-bold">{15 + i}</div>
+                        </div>
+                      ))}
+                    </div>
+                    <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                      {['09:00 AM', '10:00 AM', '12:00 PM', '02:00 PM', '04:00 PM', '06:00 PM'].map((time, i) => (
+                        <div key={i} className={`p-4 rounded-xl border-2 text-center cursor-pointer font-semibold ${i === 1 ? 'border-primary' : 'border-slate-50'}`}>
+                          {time}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {currentStep === 3 && (
+                  <div className="space-y-8">
+                    <h2 className="text-3xl font-bold">Where should we come?</h2>
+                    <div className="space-y-4">
+                      <div className="p-6 rounded-3xl border-2 border-primary bg-primary/5 relative">
+                        <div className="flex items-start gap-4">
+                          <MapPin className="text-primary shrink-0 mt-1" />
                           <div>
-                            <h4 className="font-bold text-gray-900">{addr.title}</h4>
-                            <p className="text-sm text-gray-500 mt-1">{addr.address}</p>
+                            <h4 className="font-bold">Home</h4>
+                            <p className="text-sm text-muted-foreground">Plot 42, Green Park, South Delhi, 110016</p>
                           </div>
                         </div>
+                        <Check className="absolute top-6 right-6 text-primary" />
                       </div>
-                    ))}
-                  </div>
-                </motion.div>
-              )}
-
-              {step === 3 && (
-                <motion.div 
-                  key="step3"
-                  initial={{ opacity: 0, x: 20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: -20 }}
-                  className="space-y-8 flex-1"
-                >
-                  <h2 className="text-2xl font-bold text-gray-900">Payment Method</h2>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="p-6 rounded-2xl border-2 border-purple-600 bg-purple-50 flex items-center space-x-4">
-                       <div className="w-12 h-12 bg-purple-600 rounded-xl flex items-center justify-center text-white">
-                          <CreditCard size={24} />
-                       </div>
-                       <div className="flex-1">
-                          <h4 className="font-bold">Online Payment</h4>
-                          <p className="text-xs text-purple-600">UPI, Card, Wallets</p>
-                       </div>
-                       <CheckCircle2 className="text-purple-600" />
-                    </div>
-                    <div className="p-6 rounded-2xl border-2 border-gray-100 bg-gray-50 flex items-center space-x-4 opacity-60 grayscale cursor-not-allowed">
-                       <div className="w-12 h-12 bg-gray-300 rounded-xl flex items-center justify-center text-white">
-                          <Clock size={24} />
-                       </div>
-                       <div className="flex-1">
-                          <h4 className="font-bold">Cash After Service</h4>
-                          <p className="text-xs text-gray-500">Not available for this slot</p>
-                       </div>
+                      <button className="w-full p-6 rounded-3xl border-2 border-dashed border-slate-200 text-muted-foreground hover:text-primary hover:border-primary transition-all font-bold">
+                        + Add New Address
+                      </button>
                     </div>
                   </div>
+                )}
 
-                  <div className="p-8 bg-gray-900 rounded-3xl text-white">
-                     <div className="flex justify-between items-center mb-6">
-                        <span className="text-gray-400">Total Amount</span>
-                        <span className="text-3xl font-black">₹599</span>
-                     </div>
-                     <p className="text-xs text-gray-500 leading-relaxed">
-                        By clicking "Pay Now", you agree to our booking policy and terms of service.
-                     </p>
+                {currentStep === 4 && (
+                  <div className="space-y-8">
+                    <h2 className="text-3xl font-bold">Review booking</h2>
+                    <div className="bg-slate-50 rounded-3xl p-8 space-y-6">
+                      <div className="flex justify-between items-center border-b border-slate-200 pb-4">
+                        <span className="text-muted-foreground">Service</span>
+                        <span className="font-bold">Deep Home Cleaning</span>
+                      </div>
+                      <div className="flex justify-between items-center border-b border-slate-200 pb-4">
+                        <span className="text-muted-foreground">Date & Time</span>
+                        <span className="font-bold">May 15, 10:00 AM</span>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <span className="text-muted-foreground">Address</span>
+                        <span className="font-bold text-right max-w-[200px]">Green Park, South Delhi</span>
+                      </div>
+                    </div>
+                    <div className="relative">
+                      <input 
+                        type="text" 
+                        placeholder="Apply Promo Code" 
+                        className="w-full p-5 bg-white rounded-2xl border border-border pr-24 focus:ring-2 focus:ring-primary outline-none"
+                      />
+                      <button className="absolute right-2 top-2 bottom-2 px-6 bg-slate-900 text-white rounded-xl text-sm font-bold">
+                        Apply
+                      </button>
+                    </div>
                   </div>
-                </motion.div>
-              )}
+                )}
 
-              {step === 4 && (
-                <motion.div 
-                  key="step4"
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  className="text-center py-12 flex-1 flex flex-col items-center justify-center"
-                >
-                  <div className="w-24 h-24 bg-green-100 text-green-600 rounded-full flex items-center justify-center mb-8">
-                     <CheckCircle2 size={48} />
+                {currentStep === 5 && (
+                  <div className="space-y-8">
+                    <h2 className="text-3xl font-bold">Payment Method</h2>
+                    <div className="space-y-4">
+                      {['UPI (PhonePe, Google Pay)', 'Credit / Debit Card', 'Net Banking', 'Cash after service'].map((method, i) => (
+                        <div key={i} className={`p-6 rounded-3xl border-2 flex items-center justify-between cursor-pointer ${i === 0 ? 'border-primary bg-primary/5' : 'border-slate-50'}`}>
+                          <div className="flex items-center gap-4">
+                            <div className={`w-5 h-5 rounded-full border-2 ${i === 0 ? 'border-primary flex items-center justify-center' : 'border-border'}`}>
+                              {i === 0 && <div className="w-2.5 h-2.5 rounded-full bg-primary" />}
+                            </div>
+                            <span className="font-bold">{method}</span>
+                          </div>
+                          <CreditCard className={i === 0 ? 'text-primary' : 'text-slate-300'} />
+                        </div>
+                      ))}
+                    </div>
                   </div>
-                  <h2 className="text-4xl font-black text-gray-900 mb-4">Booking Confirmed!</h2>
-                  <p className="text-gray-500 mb-10 max-w-sm mx-auto">
-                    Your service has been scheduled for {selectedSlot}. A professional will be assigned shortly.
-                  </p>
-                  <Link href="/orders" className="px-8 py-4 bg-purple-600 text-white font-bold rounded-2xl hover:bg-purple-700 transition-all active:scale-95">
-                    View My Bookings
-                  </Link>
-                </motion.div>
-              )}
+                )}
+              </motion.div>
             </AnimatePresence>
 
-            {step <= 3 && (
-              <div className="mt-12 pt-8 border-t border-gray-100 flex items-center justify-between">
-                <button 
-                  onClick={() => step > 1 && setStep(step - 1)}
-                  className={`text-sm font-bold ${step === 1 ? 'invisible' : 'text-gray-500 hover:text-gray-900'}`}
-                >
-                  Back
-                </button>
-                <button 
-                  disabled={loading || (step === 1 && !selectedSlot) || (step === 2 && !selectedAddress)}
-                  onClick={handleNext}
-                  className="px-10 py-4 bg-purple-600 text-white font-bold rounded-2xl hover:bg-purple-700 transition-all active:scale-95 disabled:opacity-50 flex items-center space-x-2"
-                >
-                  {loading ? (
-                    <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                  ) : (
-                    <>
-                      <span>{step === 3 ? 'Pay Now' : 'Continue'}</span>
-                      <ChevronRight size={18} />
-                    </>
-                  )}
-                </button>
+            <div className="mt-8 flex items-center justify-between">
+              <button 
+                onClick={prevStep}
+                disabled={currentStep === 1}
+                className={`flex items-center gap-2 px-8 py-4 rounded-2xl font-bold transition-all ${
+                  currentStep === 1 ? 'opacity-0' : 'bg-white text-foreground hover:bg-slate-100 border border-border shadow-sm'
+                }`}
+              >
+                <ChevronLeft size={20} /> Back
+              </button>
+              <button 
+                onClick={nextStep}
+                className="flex items-center gap-2 px-12 py-4 bg-primary text-white rounded-2xl font-bold hover:bg-primary/90 transition-all shadow-xl shadow-primary/20"
+              >
+                {currentStep === 5 ? 'Pay Now' : 'Continue'} <ChevronRight size={20} />
+              </button>
+            </div>
+          </div>
+
+          {/* Sidebar Summary */}
+          <div className="space-y-6">
+            <div className="bg-white rounded-[40px] border border-border p-8 shadow-xl">
+              <h3 className="text-lg font-bold mb-6">Price Summary</h3>
+              <div className="space-y-4">
+                <div className="flex justify-between text-sm text-muted-foreground">
+                  <span>Item Total</span>
+                  <span>₹2,499</span>
+                </div>
+                <div className="flex justify-between text-sm text-muted-foreground">
+                  <span>Taxes & Fee</span>
+                  <span>₹120</span>
+                </div>
+                <div className="flex justify-between text-sm text-green-600 font-medium">
+                  <span>Discount</span>
+                  <span>-₹500</span>
+                </div>
+                <div className="pt-4 border-t border-slate-100 flex justify-between items-center">
+                  <span className="font-bold">Total Payable</span>
+                  <span className="text-2xl font-black">₹2,119</span>
+                </div>
               </div>
-            )}
+            </div>
+
+            <div className="bg-green-50 border border-green-100 rounded-3xl p-6 flex items-start gap-4">
+              <ShieldCheck className="text-green-600 shrink-0" size={24} />
+              <div>
+                <h4 className="text-sm font-bold text-green-900">Safety First</h4>
+                <p className="text-xs text-green-700 leading-relaxed mt-1">
+                  Our pros follow strict safety protocols. Mask and temperature checks are mandatory.
+                </p>
+              </div>
+            </div>
           </div>
         </div>
       </div>

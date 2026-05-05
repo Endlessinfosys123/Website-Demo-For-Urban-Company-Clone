@@ -3,37 +3,26 @@ import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
-export const getCategories = async (req: Request, res: Response) => {
+export const getAllServices = async (req: Request, res: Response) => {
   try {
-    const categories = await prisma.category.findMany({
-      where: { isActive: true },
-      include: { children: true }
-    });
-    res.json({ success: true, data: categories });
-  } catch (error: any) {
-    res.status(500).json({ success: false, message: error.message });
-  }
-};
+    const { category, city, featured } = req.query;
+    
+    const where: any = { isActive: true };
+    if (category) where.categoryId = category as string;
+    if (featured) where.isFeatured = featured === 'true';
+    if (city) where.cityIds = { has: city as string };
 
-export const getCategoryBySlug = async (req: Request, res: Response) => {
-  try {
-    const { slug } = req.params;
-    const category = await prisma.category.findUnique({
-      where: { slug },
+    const services = await prisma.service.findMany({
+      where,
       include: {
-        services: {
-          include: {
-            packages: true
-          }
+        category: true,
+        packages: {
+          where: { isActive: true },
+          orderBy: { sortOrder: 'asc' }
         }
       }
     });
-    
-    if (!category) {
-      return res.status(404).json({ success: false, message: 'Category not found' });
-    }
-    
-    res.json({ success: true, data: category });
+    res.status(200).json({ success: true, data: services });
   } catch (error: any) {
     res.status(500).json({ success: false, message: error.message });
   }
@@ -41,17 +30,57 @@ export const getCategoryBySlug = async (req: Request, res: Response) => {
 
 export const getServiceBySlug = async (req: Request, res: Response) => {
   try {
-    const { slug } = req.params;
     const service = await prisma.service.findUnique({
-      where: { slug },
-      include: { packages: true }
+      where: { slug: req.params.slug },
+      include: {
+        category: true,
+        packages: {
+          where: { isActive: true },
+          orderBy: { sortOrder: 'asc' }
+        },
+        reviews: {
+          take: 5,
+          orderBy: { createdAt: 'desc' },
+          include: { user: { select: { name: true, profilePhoto: true } } }
+        }
+      }
     });
-    
     if (!service) {
       return res.status(404).json({ success: false, message: 'Service not found' });
     }
-    
-    res.json({ success: true, data: service });
+    res.status(200).json({ success: true, data: service });
+  } catch (error: any) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+export const searchServices = async (req: Request, res: Response) => {
+  try {
+    const { q } = req.query;
+    if (!q) return res.status(200).json({ success: true, data: [] });
+
+    const services = await prisma.service.findMany({
+      where: {
+        OR: [
+          { name: { contains: q as string, mode: 'insensitive' } },
+          { description: { contains: q as string, mode: 'insensitive' } }
+        ],
+        isActive: true
+      },
+      include: { category: true }
+    });
+    res.status(200).json({ success: true, data: services });
+  } catch (error: any) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+export const createService = async (req: Request, res: Response) => {
+  try {
+    const service = await prisma.service.create({
+      data: req.body
+    });
+    res.status(201).json({ success: true, data: service });
   } catch (error: any) {
     res.status(500).json({ success: false, message: error.message });
   }

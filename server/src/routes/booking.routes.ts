@@ -1,13 +1,14 @@
 import { Router } from 'express';
-import * as bookingController from '../controllers/booking.controller';
-import { authenticate } from '../middleware/auth.middleware';
+import { createBooking, getMyBookings, getBookingDetail, updateBookingStatus } from '../controllers/booking.controller';
+import { protect } from '../middleware/auth.middleware';
 
 const router = Router();
 
-router.use(authenticate);
+router.use(protect);
 
-router.post('/', bookingController.createBooking);
-router.get('/my-bookings', bookingController.getUserBookings);
-router.patch('/:id/status', bookingController.updateBookingStatus);
+router.post('/', createBooking as any);
+router.get('/', getMyBookings as any);
+router.get('/:id', getBookingDetail as any);
+router.put('/:id/status', updateBookingStatus as any);
 
 export default router;
