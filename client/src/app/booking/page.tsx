@@ -1,14 +1,16 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Calendar, Clock, MapPin, 
   CreditCard, ChevronRight, ChevronLeft, 
   CheckCircle2, Star, ShieldCheck, 
-  Smartphone, User, Mail, Home
+  Smartphone, User, Mail, Home, Trash2
 } from 'lucide-react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { useCartStore } from '@/store/useCartStore';
 
 const steps = [
   { id: 1, name: 'Service Info', icon: <Home size={20} /> },
@@ -18,7 +20,10 @@ const steps = [
 ];
 
 const BookingPage = () => {
+  const router = useRouter();
+  const { items, getTotal, removeItem, clearCart } = useCartStore();
   const [currentStep, setCurrentStep] = useState(1);
+  const [isClient, setIsClient] = useState(false);
   const [formData, setFormData] = useState({
     date: '',
     time: '',
@@ -26,8 +31,40 @@ const BookingPage = () => {
     paymentMethod: 'razorpay'
   });
 
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
+  const subtotal = getTotal();
+  const platformFee = items.length > 0 ? 49 : 0;
+  const total = subtotal + platformFee;
+
   const nextStep = () => setCurrentStep(prev => Math.min(prev + 1, steps.length));
   const prevStep = () => setCurrentStep(prev => Math.max(prev - 1, 1));
+
+  const handleBookingConfirm = () => {
+    // Simulate booking success
+    alert('Booking Confirmed Successfully!');
+    clearCart();
+    router.push('/');
+  };
+
+  if (!isClient) return null;
+
+  if (items.length === 0 && currentStep === 1) {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center bg-slate-50 p-4">
+        <div className="w-24 h-24 bg-slate-200 rounded-full flex items-center justify-center mb-6">
+          <Trash2 size={48} className="text-slate-400" />
+        </div>
+        <h2 className="text-2xl font-bold mb-2">Your cart is empty</h2>
+        <p className="text-slate-500 mb-8">Add some services to get started!</p>
+        <Link href="/" className="bg-primary text-white px-8 py-4 rounded-2xl font-bold shadow-xl shadow-primary/20">
+          Explore Services
+        </Link>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-[#f8fafc] pt-24 pb-20">
@@ -71,20 +108,32 @@ const BookingPage = () => {
                 {currentStep === 1 && (
                   <div className="space-y-8">
                     <div>
-                      <h2 className="text-3xl font-bold mb-2">Confirm Service</h2>
-                      <p className="text-slate-500">You are booking Deep Home Cleaning in New Delhi</p>
+                      <h2 className="text-3xl font-bold mb-2">Review Services</h2>
+                      <p className="text-slate-500">Confirm the items in your booking</p>
                     </div>
-                    <div className="bg-slate-50 p-6 rounded-3xl border border-dashed border-slate-200">
-                      <div className="flex justify-between items-center mb-4">
-                        <span className="font-bold text-lg">Premium 2 BHK Package</span>
-                        <span className="text-primary font-black text-xl">₹3,499</span>
-                      </div>
-                      <ul className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm text-slate-600">
-                        <li className="flex items-center gap-2"><CheckCircle2 size={16} className="text-green-500" /> All rooms cleaning</li>
-                        <li className="flex items-center gap-2"><CheckCircle2 size={16} className="text-green-500" /> Kitchen deep cleaning</li>
-                        <li className="flex items-center gap-2"><CheckCircle2 size={16} className="text-green-500" /> Bathroom descaling</li>
-                        <li className="flex items-center gap-2"><CheckCircle2 size={16} className="text-green-500" /> Floor scrubbing</li>
-                      </ul>
+                    <div className="space-y-4">
+                      {items.map((item) => (
+                        <div key={item.id} className="bg-slate-50 p-6 rounded-3xl border border-slate-100 flex items-center justify-between group">
+                          <div className="flex items-center gap-4">
+                             <div className="w-16 h-16 bg-white rounded-2xl flex items-center justify-center text-3xl shadow-sm">
+                               {item.image}
+                             </div>
+                             <div>
+                                <h4 className="font-bold text-lg">{item.name}</h4>
+                                <p className="text-xs text-slate-400 uppercase tracking-widest">{item.category}</p>
+                             </div>
+                          </div>
+                          <div className="flex items-center gap-6">
+                             <div className="text-xl font-black text-slate-900">₹{item.price}</div>
+                             <button 
+                              onClick={() => removeItem(item.id)}
+                              className="p-2 text-slate-300 hover:text-red-500 transition-colors"
+                             >
+                               <Trash2 size={20} />
+                             </button>
+                          </div>
+                        </div>
+                      ))}
                     </div>
                   </div>
                 )}
@@ -95,7 +144,7 @@ const BookingPage = () => {
                       <h2 className="text-3xl font-bold mb-2">When should we arrive?</h2>
                       <p className="text-slate-500">Select a date and time slot for your service.</p>
                     </div>
-                    <div className="grid grid-cols-3 md:grid-cols-4 gap-4">
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                       {['May 15', 'May 16', 'May 17', 'May 18'].map((date) => (
                         <button
                           key={date}
@@ -189,7 +238,7 @@ const BookingPage = () => {
                     <ChevronLeft size={20} /> Back
                   </button>
                   <button 
-                    onClick={nextStep}
+                    onClick={currentStep === steps.length ? handleBookingConfirm : nextStep}
                     className="bg-primary text-white px-10 py-4 rounded-2xl font-bold flex items-center gap-2 hover:bg-primary/90 transition-all shadow-xl shadow-primary/20 active:scale-95"
                   >
                     {currentStep === steps.length ? 'Confirm Booking' : 'Next Step'} <ChevronRight size={20} />
@@ -205,8 +254,8 @@ const BookingPage = () => {
               <h3 className="text-xl font-bold mb-8">Payment Summary</h3>
               <div className="space-y-6">
                 <div className="flex justify-between items-center text-sm">
-                  <span className="text-slate-500">Item Total</span>
-                  <span className="font-bold">₹3,499</span>
+                  <span className="text-slate-500">Item Total ({items.length} items)</span>
+                  <span className="font-bold">₹{subtotal}</span>
                 </div>
                 <div className="flex justify-between items-center text-sm">
                   <span className="text-slate-500">Conveyance Fee</span>
@@ -214,12 +263,12 @@ const BookingPage = () => {
                 </div>
                 <div className="flex justify-between items-center text-sm">
                   <span className="text-slate-500">Platform Fee</span>
-                  <span className="font-bold">₹49</span>
+                  <span className="font-bold">₹{platformFee}</span>
                 </div>
                 <div className="h-px bg-slate-100" />
                 <div className="flex justify-between items-center">
                   <span className="text-lg font-bold">Amount Payable</span>
-                  <span className="text-2xl font-black text-primary">₹3,548</span>
+                  <span className="text-2xl font-black text-primary">₹{total}</span>
                 </div>
               </div>
 

@@ -1,15 +1,34 @@
 'use client';
 
 import React, { useState } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { 
   User, Briefcase, FileText, 
   ChevronRight, CheckCircle2, 
   Smartphone, MapPin, Award, 
-  TrendingUp, ShieldCheck, Heart
+  TrendingUp, ShieldCheck, Heart, Info
 } from 'lucide-react';
 
 const PartnerPage = () => {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
+  const [formData, setFormData] = useState({
+    name: '',
+    phone: '',
+    skill: 'AC Service & Repair',
+    city: 'New Delhi'
+  });
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    // Simulate API call
+    setTimeout(() => {
+      setIsSubmitting(false);
+      setIsSuccess(true);
+    }, 1500);
+  };
+
   return (
     <div className="min-h-screen bg-white pt-20">
       {/* Hero Section */}
@@ -37,7 +56,10 @@ const PartnerPage = () => {
                 Join 50,000+ professionals who have transformed their lives with UrbanClone.
               </p>
               <div className="flex flex-wrap gap-4">
-                <button className="bg-primary hover:bg-primary/90 text-white px-8 py-4 rounded-2xl font-bold flex items-center gap-2 transition-all shadow-xl shadow-primary/20">
+                <button 
+                  onClick={() => document.getElementById('register')?.scrollIntoView({ behavior: 'smooth' })}
+                  className="bg-primary hover:bg-primary/90 text-white px-8 py-4 rounded-2xl font-bold flex items-center gap-2 transition-all shadow-xl shadow-primary/20"
+                >
                   Register Now <ChevronRight size={20} />
                 </button>
                 <div className="flex items-center gap-2 px-6 py-4 bg-white/10 backdrop-blur-md rounded-2xl border border-white/20">
@@ -113,63 +135,120 @@ const PartnerPage = () => {
               </div>
             </div>
 
-            <div className="md:w-1/2 p-12 bg-white">
-              <div className="space-y-6">
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <label className="text-xs font-bold uppercase text-slate-400">Full Name</label>
-                    <div className="relative">
-                      <User className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
-                      <input type="text" className="w-full pl-12 p-4 bg-slate-50 rounded-2xl border-none focus:ring-2 focus:ring-primary/20 outline-none" placeholder="Enter name" />
+            <div className="md:w-1/2 p-12 bg-white relative">
+              <AnimatePresence mode="wait">
+                {isSuccess ? (
+                  <motion.div 
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    className="h-full flex flex-col items-center justify-center text-center"
+                  >
+                    <div className="w-24 h-24 bg-green-100 text-green-600 rounded-full flex items-center justify-center mb-6">
+                      <CheckCircle2 size={48} />
                     </div>
-                  </div>
-                  <div className="space-y-2">
-                    <label className="text-xs font-bold uppercase text-slate-400">Phone Number</label>
-                    <div className="relative">
-                      <Smartphone className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
-                      <input type="tel" className="w-full pl-12 p-4 bg-slate-50 rounded-2xl border-none focus:ring-2 focus:ring-primary/20 outline-none" placeholder="+91" />
+                    <h3 className="text-3xl font-bold mb-4 text-slate-900">Application Received!</h3>
+                    <p className="text-slate-500">Thank you for showing interest. Our team will contact you within 24 hours for document verification.</p>
+                    <button 
+                      onClick={() => setIsSuccess(false)}
+                      className="mt-8 text-primary font-bold hover:underline"
+                    >
+                      Apply for another skill
+                    </button>
+                  </motion.div>
+                ) : (
+                  <motion.form 
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    onSubmit={handleSubmit} 
+                    className="space-y-6"
+                  >
+                    <div className="grid grid-cols-1 gap-6">
+                      <div className="space-y-2">
+                        <label className="text-xs font-bold uppercase text-slate-400">Full Name</label>
+                        <div className="relative">
+                          <User className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
+                          <input 
+                            required
+                            type="text" 
+                            className="w-full pl-12 p-4 bg-slate-50 rounded-2xl border-none focus:ring-2 focus:ring-primary/20 outline-none" 
+                            placeholder="Enter your name" 
+                            value={formData.name}
+                            onChange={(e) => setFormData({...formData, name: e.target.value})}
+                          />
+                        </div>
+                      </div>
+                      <div className="space-y-2">
+                        <label className="text-xs font-bold uppercase text-slate-400">Phone Number</label>
+                        <div className="relative">
+                          <Smartphone className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
+                          <input 
+                            required
+                            type="tel" 
+                            className="w-full pl-12 p-4 bg-slate-50 rounded-2xl border-none focus:ring-2 focus:ring-primary/20 outline-none" 
+                            placeholder="+91" 
+                            value={formData.phone}
+                            onChange={(e) => setFormData({...formData, phone: e.target.value})}
+                          />
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                </div>
 
-                <div className="space-y-2">
-                  <label className="text-xs font-bold uppercase text-slate-400">Primary Skill</label>
-                  <div className="relative">
-                    <Briefcase className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
-                    <select className="w-full pl-12 p-4 bg-slate-50 rounded-2xl border-none focus:ring-2 focus:ring-primary/20 outline-none appearance-none">
-                      <option>AC Service & Repair</option>
-                      <option>Home Cleaning</option>
-                      <option>Salon & Spa</option>
-                      <option>Electrician</option>
-                      <option>Plumber</option>
-                    </select>
-                  </div>
-                </div>
+                    <div className="space-y-2">
+                      <label className="text-xs font-bold uppercase text-slate-400">Primary Skill</label>
+                      <div className="relative">
+                        <Briefcase className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
+                        <select 
+                          className="w-full pl-12 p-4 bg-slate-50 rounded-2xl border-none focus:ring-2 focus:ring-primary/20 outline-none appearance-none"
+                          value={formData.skill}
+                          onChange={(e) => setFormData({...formData, skill: e.target.value})}
+                        >
+                          <option>AC Service & Repair</option>
+                          <option>Home Cleaning</option>
+                          <option>Salon & Spa</option>
+                          <option>Electrician</option>
+                          <option>Plumber</option>
+                        </select>
+                      </div>
+                    </div>
 
-                <div className="space-y-2">
-                  <label className="text-xs font-bold uppercase text-slate-400">City</label>
-                  <div className="relative">
-                    <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
-                    <select className="w-full pl-12 p-4 bg-slate-50 rounded-2xl border-none focus:ring-2 focus:ring-primary/20 outline-none appearance-none">
-                      <option>New Delhi</option>
-                      <option>Mumbai</option>
-                      <option>Bangalore</option>
-                      <option>Hyderabad</option>
-                    </select>
-                  </div>
-                </div>
+                    <div className="space-y-2">
+                      <label className="text-xs font-bold uppercase text-slate-400">City</label>
+                      <div className="relative">
+                        <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
+                        <select 
+                          className="w-full pl-12 p-4 bg-slate-50 rounded-2xl border-none focus:ring-2 focus:ring-primary/20 outline-none appearance-none"
+                          value={formData.city}
+                          onChange={(e) => setFormData({...formData, city: e.target.value})}
+                        >
+                          <option>New Delhi</option>
+                          <option>Mumbai</option>
+                          <option>Bangalore</option>
+                          <option>Hyderabad</option>
+                        </select>
+                      </div>
+                    </div>
 
-                <div className="p-4 bg-blue-50 rounded-2xl flex items-start gap-3">
-                  <Info className="text-blue-500 shrink-0 mt-0.5" size={18} />
-                  <p className="text-[10px] text-blue-700 font-medium">
-                    By submitting this form, you agree to our Terms of Use and Privacy Policy. We will contact you for document verification.
-                  </p>
-                </div>
+                    <div className="p-4 bg-blue-50 rounded-2xl flex items-start gap-3">
+                      <Info className="text-blue-500 shrink-0 mt-0.5" size={18} />
+                      <p className="text-[10px] text-blue-700 font-medium">
+                        By submitting this form, you agree to our Terms of Use and Privacy Policy. We will contact you for document verification.
+                      </p>
+                    </div>
 
-                <button className="w-full py-5 bg-primary text-white font-bold rounded-2xl shadow-xl shadow-primary/20 hover:shadow-2xl transition-all hover:scale-[1.02] active:scale-95">
-                  Submit Application
-                </button>
-              </div>
+                    <button 
+                      type="submit"
+                      disabled={isSubmitting}
+                      className="w-full py-5 bg-primary text-white font-bold rounded-2xl shadow-xl shadow-primary/20 hover:shadow-2xl transition-all hover:scale-[1.02] active:scale-95 disabled:opacity-70 flex items-center justify-center gap-2"
+                    >
+                      {isSubmitting ? (
+                        <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                      ) : null}
+                      {isSubmitting ? 'Submitting...' : 'Submit Application'}
+                    </button>
+                  </motion.form>
+                )}
+              </AnimatePresence>
             </div>
           </div>
         </div>
@@ -177,13 +256,5 @@ const PartnerPage = () => {
     </div>
   );
 };
-
-const Info = ({ size, className }: { size: number, className?: string }) => (
-  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
-    <circle cx="12" cy="12" r="10" />
-    <line x1="12" y1="16" x2="12" y2="12" />
-    <line x1="12" y1="8" x2="12.01" y2="8" />
-  </svg>
-);
 
 export default PartnerPage;

@@ -3,14 +3,24 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Search, MapPin, ChevronRight, Star, ShieldCheck, Zap } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 import CitySelector from '../layout/CitySelector';
 
 const HeroSection = () => {
+  const router = useRouter();
   const [isCityOpen, setIsCityOpen] = useState(false);
   const [selectedCity, setSelectedCity] = useState('New Delhi');
   const [typedText, setTypedText] = useState('');
   const phrases = ['AC Service', 'Home Cleaning', 'Salon at Home', 'Plumbing'];
   const [phraseIndex, setPhraseIndex] = useState(0);
+  const [searchQuery, setSearchQuery] = useState('');
+  
+  const popularServices = [
+    { name: 'AC Service & Repair', slug: 'ac-repair' },
+    { name: 'Bathroom Cleaning', slug: 'cleaning' },
+    { name: 'Full Home Deep Cleaning', slug: 'cleaning' },
+    { name: 'Sofa Spa & Shampoo', slug: 'cleaning' },
+  ];
 
   useEffect(() => {
     let timeout: NodeJS.Timeout;
@@ -29,6 +39,11 @@ const HeroSection = () => {
 
     return () => clearTimeout(timeout);
   }, [typedText, phraseIndex]);
+
+  const handleSearchSelect = (slug: string) => {
+    const citySlug = selectedCity.toLowerCase().replace(/ /g, '-');
+    router.push(`/${citySlug}/${slug}`);
+  };
 
   return (
     <section className="relative min-h-[90vh] flex items-center pt-20 overflow-hidden bg-white">
@@ -85,15 +100,21 @@ const HeroSection = () => {
                     type="text" 
                     placeholder="Search for 'AC service'..." 
                     className="w-full bg-transparent outline-none font-medium text-slate-900"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
                   />
                   
-                  {/* Suggestions Dropdown (Example) */}
+                  {/* Suggestions Dropdown */}
                   <div className="absolute top-16 left-0 w-full bg-white rounded-3xl shadow-2xl border border-slate-100 p-4 opacity-0 pointer-events-none group-focus-within:opacity-100 group-focus-within:pointer-events-auto transition-all translate-y-2 group-focus-within:translate-y-0 z-50">
                      <p className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-4 px-2">Popular Services</p>
                      <div className="space-y-1">
-                        {['AC Service', 'Bathroom Cleaning', 'Full Home Deep Cleaning', 'Sofa Spa'].map((s) => (
-                          <button key={s} className="w-full text-left p-3 rounded-xl hover:bg-slate-50 transition-colors flex items-center justify-between group/item">
-                            <span className="font-bold text-slate-700">{s}</span>
+                        {popularServices.filter(s => s.name.toLowerCase().includes(searchQuery.toLowerCase())).map((s) => (
+                          <button 
+                            key={s.name} 
+                            onClick={() => handleSearchSelect(s.slug)}
+                            className="w-full text-left p-3 rounded-xl hover:bg-slate-50 transition-colors flex items-center justify-between group/item"
+                          >
+                            <span className="font-bold text-slate-700">{s.name}</span>
                             <ChevronRight size={16} className="text-slate-300 group-hover/item:text-primary transition-colors" />
                           </button>
                         ))}
