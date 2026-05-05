@@ -3,6 +3,7 @@
 import React from 'react';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
+import Link from 'next/link';
 import { Search, Shield, Star, Zap, Clock } from 'lucide-react';
 
 export default function Home() {
@@ -149,10 +150,10 @@ export default function Home() {
                 transition={{ delay: i * 0.05 }}
                 className="group cursor-pointer"
               >
-                <div className={`aspect-square ${cat.color} rounded-3xl flex flex-col items-center justify-center p-6 transition-all group-hover:shadow-xl group-hover:shadow-purple-100 border border-transparent group-hover:border-white`}>
+                <Link href={`/ahmedabad/${cat.slug}`} className={`aspect-square ${cat.color} rounded-3xl flex flex-col items-center justify-center p-6 transition-all group-hover:shadow-xl group-hover:shadow-purple-100 border border-transparent group-hover:border-white`}>
                   <span className="text-5xl mb-4 transform group-hover:scale-110 transition-transform">{cat.icon}</span>
                   <h3 className="font-bold text-gray-900 text-center">{cat.name}</h3>
-                </div>
+                </Link>
               </motion.div>
             ))}
           </div>
