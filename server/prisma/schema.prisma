@@ -1,0 +1,214 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  CUSTOMER
+  PARTNER
+  ADMIN
+}
+
+enum KYCStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum BookingStatus {
+  PENDING
+  CONFIRMED
+  ASSIGNED
+  EN_ROUTE
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+}
+
+enum PaymentStatus {
+  PENDING
+  SUCCESS
+  FAILED
+  REFUNDED
+}
+
+model User {
+  id            String    @id @default(uuid())
+  phone         String    @unique
+  email         String?   @unique
+  name          String?
+  role          Role      @default(CUSTOMER)
+  avatarUrl     String?
+  walletBalance Float     @default(0.0)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  addresses     Address[]
+  bookings      Booking[]
+  partner       Partner?
+  reviews       Review[]
+  transactions  Transaction[]
+  notifications Notification[]
+}
+
+model Address {
+  id         String   @id @default(uuid())
+  userId     String
+  user       User     @relation(fields: [userId], references: [id])
+  type       String   @default("HOME") // HOME, WORK, OTHER
+  flatNo     String?
+  area       String
+  landmark   String?
+  city       String
+  state      String
+  pincode    String
+  lat        Float?
+  lng        Float?
+  isDefault  Boolean  @default(false)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  bookings   Booking[]
+}
+
+model Partner {
+  id             String    @id @default(uuid())
+  userId         String    @unique
+  user           User      @relation(fields: [userId], references: [id])
+  kycStatus      KYCStatus @default(PENDING)
+  rating         Float     @default(0.0)
+  reviewCount    Int       @default(0)
+  completionRate Float     @default(0.0)
+  isAvailable    Boolean   @default(true)
+  serviceArea    Json?     // GeoJSON or list of pincodes
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  services       PartnerService[]
+  bookings       Booking[]
+  reviews        Review[]
+}
+
+model Category {
+  id        String   @id @default(uuid())
+  name      String
+  slug      String   @unique
+  iconUrl   String?
+  parentId  String?
+  parent    Category? @relation("CategoryToCategory", fields: [parentId], references: [id])
+  children  Category[] @relation("CategoryToCategory")
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  services  Service[]
+  partners  PartnerService[]
+}
+
+model Service {
+  id          String   @id @default(uuid())
+  categoryId  String
+  category    Category @relation(fields: [categoryId], references: [id])
+  name        String
+  slug        String   @unique
+  description String
+  imageUrl    String?
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  packages    Package[]
+}
+
+model Package {
+  id          String   @id @default(uuid())
+  serviceId   String
+  service     Service  @relation(fields: [serviceId], references: [id])
+  name        String
+  price       Float
+  duration    Int      // in minutes
+  inclusions  Json     // List of features included
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  bookings    Booking[]
+}
+
+model PartnerService {
+  id         String   @id @default(uuid())
+  partnerId  String
+  partner    Partner  @relation(fields: [partnerId], references: [id])
+  categoryId String
+  category   Category @relation(fields: [categoryId], references: [id])
+
+  @@unique([partnerId, categoryId])
+}
+
+model Booking {
+  id            String        @id @default(uuid())
+  userId        String
+  user          User          @relation(fields: [userId], references: [id])
+  partnerId     String?
+  partner       Partner?      @relation(fields: [partnerId], references: [id])
+  packageId     String
+  package       Package       @relation(fields: [packageId], references: [id])
+  addressId     String
+  address       Address       @relation(fields: [addressId], references: [id])
+  slotDateTime  DateTime
+  status        BookingStatus @default(PENDING)
+  totalAmount   Float
+  paymentStatus PaymentStatus @default(PENDING)
+  paymentId     String?       // Razorpay/Stripe Payment ID
+  orderId       String?       // Razorpay Order ID
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  review        Review?
+  transactions  Transaction[]
+}
+
+model Review {
+  id         String   @id @default(uuid())
+  bookingId  String   @unique
+  booking    Booking  @relation(fields: [bookingId], references: [id])
+  userId     String
+  user       User     @relation(fields: [userId], references: [id])
+  partnerId  String
+  partner    Partner  @relation(fields: [partnerId], references: [id])
+  rating     Float
+  comment    String?
+  images     Json?    // List of review photo URLs
+  createdAt  DateTime @default(now())
+}
+
+model Transaction {
+  id         String   @id @default(uuid())
+  userId     String
+  user       User     @relation(fields: [userId], references: [id])
+  bookingId  String?
+  booking    Booking? @relation(fields: [bookingId], references: [id])
+  type       String   // CREDIT, DEBIT
+  amount     Float
+  status     String   // PENDING, SUCCESS, FAILED
+  gatewayRef String?
+  createdAt  DateTime @default(now())
+}
+
+model Notification {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  type      String
+  title     String
+  body      String
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+}

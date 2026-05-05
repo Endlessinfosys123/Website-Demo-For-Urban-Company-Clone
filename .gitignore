@@ -1,0 +1,31 @@
+# Dependencies
+**/node_modules
+**/dist
+**/.next
+**/out
+**/build
+
+# Environment
+**/.env
+**/.env.local
+**/.env.*.local
+
+# IDE
+**/.vscode
+**/.idea
+**/*.swp
+**/ *.swo
+
+# Logs
+**/logs
+**/*.log
+**/npm-debug.log*
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Prisma
+**/prisma/migrations
+**/prisma/*.db
+**/node_modules/.prisma
