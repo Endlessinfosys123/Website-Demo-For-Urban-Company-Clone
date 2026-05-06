@@ -3,10 +3,10 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "dev": "npm run dev --prefix client & npm run dev --prefix server",
-    "build": "cd client && next build",
-    "start": "cd client && next start",
-    "install-all": "npm install --prefix client && npm install --prefix server"
+    "dev": "npm run dev --prefix frontend & npm run dev --prefix backend",
+    "build": "cd frontend && next build",
+    "start": "cd frontend && next start",
+    "install-all": "npm install --prefix frontend && npm install --prefix backend"
   },
   "dependencies": {
     "@tanstack/react-query": "^5.100.9",
