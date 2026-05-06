@@ -61,7 +61,7 @@ const Header = () => {
             Register as a Professional
           </Link>
           <div className="flex items-center gap-4">
-            <Link href="/cart" className="relative p-2 text-gray-600 hover:text-black hover:bg-gray-50 rounded-full transition-colors">
+            <Link href="/booking" className="relative p-2 text-gray-600 hover:text-black hover:bg-gray-50 rounded-full transition-colors">
               <ShoppingCart size={22} />
               <span className="absolute top-0 right-0 w-4 h-4 bg-black text-white text-[10px] font-bold flex items-center justify-center rounded-full">
                 0

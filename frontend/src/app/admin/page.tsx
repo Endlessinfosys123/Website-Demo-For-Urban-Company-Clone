@@ -1,7 +1,6 @@
 'use client';
 
 import React from 'react';
-import { motion } from 'framer-motion';
 import { 
   BarChart3, Users, Briefcase, 
   Wallet, TrendingUp, AlertCircle,
@@ -17,98 +16,95 @@ const AdminDashboard = () => {
   ];
 
   return (
-    <div className="bg-slate-50 min-h-screen pb-24">
+    <div className="bg-gray-50 min-h-screen pb-24">
       {/* Admin Top Bar */}
-      <div className="bg-white border-b border-border sticky top-0 z-40 px-8 py-4 flex items-center justify-between">
+      <div className="bg-white border-b border-gray-200 sticky top-0 z-40 px-8 py-4 flex items-center justify-between">
         <div className="flex items-center gap-4">
-          <h1 className="text-xl font-black tracking-tight">ADMIN<span className="text-primary">CENTER</span></h1>
-          <div className="w-px h-6 bg-border" />
-          <p className="text-sm font-bold text-muted-foreground">Platform Overview</p>
+          <h1 className="text-xl font-black tracking-tight">ADMIN<span className="text-black">CENTER</span></h1>
+          <div className="w-px h-6 bg-gray-200" />
+          <p className="text-sm font-bold text-gray-500">Platform Overview</p>
         </div>
         <div className="flex items-center gap-6">
           <div className="relative hidden md:block">
-            <Search size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
+            <Search size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500" />
             <input 
               type="text" 
               placeholder="Search anything..." 
-              className="bg-slate-50 border-none outline-none py-2 pl-10 pr-4 rounded-xl text-sm w-64 focus:ring-2 focus:ring-primary/20"
+              className="bg-gray-50 border border-gray-200 outline-none py-2 pl-10 pr-4 rounded-lg text-sm w-64 focus:border-black"
             />
           </div>
-          <div className="w-10 h-10 rounded-full bg-primary text-white flex items-center justify-center font-bold">A</div>
+          <div className="w-10 h-10 rounded-full bg-black text-white flex items-center justify-center font-bold">A</div>
         </div>
       </div>
 
-      <div className="container mx-auto px-8 py-10">
+      <div className="max-w-7xl mx-auto px-8 py-10">
         <div className="flex items-center justify-between mb-10">
           <div>
-            <h2 className="text-3xl font-black mb-2">Executive Summary</h2>
-            <p className="text-muted-foreground font-medium">Real-time performance metrics for your platform.</p>
+            <h2 className="text-2xl font-bold mb-2 text-black">Executive Summary</h2>
+            <p className="text-gray-500 font-medium">Real-time performance metrics for your platform.</p>
           </div>
           <div className="flex items-center gap-3">
-            <button className="flex items-center gap-2 bg-white border border-border px-4 py-2.5 rounded-xl font-bold text-sm hover:bg-slate-50 transition-all">
+            <button className="flex items-center gap-2 bg-white border border-gray-200 px-4 py-2.5 rounded-lg font-semibold text-sm hover:bg-gray-50 transition-colors">
               <Download size={18} /> Export
             </button>
-            <button className="flex items-center gap-2 bg-primary text-white px-6 py-2.5 rounded-xl font-bold text-sm hover:bg-primary/90 transition-all shadow-xl shadow-primary/20">
+            <button className="flex items-center gap-2 bg-black text-white px-6 py-2.5 rounded-lg font-semibold text-sm hover:bg-gray-800 transition-colors">
               <Plus size={18} /> Add Service
             </button>
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
           {kpis.map((kpi, i) => (
-            <motion.div 
+            <div 
               key={i}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: i * 0.1 }}
-              className="bg-white p-8 rounded-[35px] border border-border shadow-sm"
+              className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm"
             >
               <div className="flex justify-between items-start mb-6">
-                <div className="p-4 bg-slate-50 rounded-2xl">
+                <div className="p-3 bg-gray-50 rounded-lg">
                   {kpi.icon}
                 </div>
-                <div className="bg-green-50 text-green-600 text-xs font-bold px-2 py-1 rounded-lg">
+                <div className="bg-green-50 text-green-700 text-xs font-bold px-2 py-1 rounded-md">
                   {kpi.trend}
                 </div>
               </div>
-              <h4 className="text-slate-500 text-sm font-bold uppercase tracking-wider mb-1">{kpi.label}</h4>
-              <p className="text-3xl font-black">{kpi.value}</p>
-            </motion.div>
+              <h4 className="text-gray-500 text-xs font-bold uppercase tracking-wider mb-1">{kpi.label}</h4>
+              <p className="text-2xl font-bold text-black">{kpi.value}</p>
+            </div>
           ))}
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Recent Bookings Table */}
-          <div className="lg:col-span-2 bg-white rounded-[40px] border border-border shadow-xl overflow-hidden">
-            <div className="p-8 border-b border-border flex items-center justify-between">
-              <h3 className="text-xl font-bold">Recent Bookings</h3>
-              <button className="text-primary font-bold text-sm hover:underline">View All</button>
+          <div className="lg:col-span-2 bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+            <div className="p-6 border-b border-gray-200 flex items-center justify-between">
+              <h3 className="text-lg font-bold text-black">Recent Bookings</h3>
+              <button className="text-black font-semibold text-sm hover:underline">View All</button>
             </div>
             <div className="overflow-x-auto">
               <table className="w-full text-left">
-                <thead className="bg-slate-50 border-b border-border">
+                <thead className="bg-gray-50 border-b border-gray-200">
                   <tr>
-                    <th className="px-8 py-4 text-xs font-bold uppercase tracking-wider text-muted-foreground">Service</th>
-                    <th className="px-8 py-4 text-xs font-bold uppercase tracking-wider text-muted-foreground">Customer</th>
-                    <th className="px-8 py-4 text-xs font-bold uppercase tracking-wider text-muted-foreground">Status</th>
-                    <th className="px-8 py-4 text-xs font-bold uppercase tracking-wider text-muted-foreground">Amount</th>
+                    <th className="px-6 py-4 text-xs font-bold uppercase tracking-wider text-gray-500">Service</th>
+                    <th className="px-6 py-4 text-xs font-bold uppercase tracking-wider text-gray-500">Customer</th>
+                    <th className="px-6 py-4 text-xs font-bold uppercase tracking-wider text-gray-500">Status</th>
+                    <th className="px-6 py-4 text-xs font-bold uppercase tracking-wider text-gray-500">Amount</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-border">
+                <tbody className="divide-y divide-gray-100">
                   {[1, 2, 3, 4, 5].map((item) => (
-                    <tr key={item} className="hover:bg-slate-50 transition-colors group">
-                      <td className="px-8 py-6">
-                        <p className="font-bold">Full Home Cleaning</p>
-                        <p className="text-xs text-muted-foreground">ID: #UC-981{item}</p>
+                    <tr key={item} className="hover:bg-gray-50 transition-colors">
+                      <td className="px-6 py-4">
+                        <p className="font-bold text-sm text-black">Full Home Cleaning</p>
+                        <p className="text-xs text-gray-500 mt-1">ID: #UC-981{item}</p>
                       </td>
-                      <td className="px-8 py-6">
-                        <p className="font-bold">Rahul Mishra</p>
-                        <p className="text-xs text-muted-foreground">South Delhi</p>
+                      <td className="px-6 py-4">
+                        <p className="font-bold text-sm text-black">Rahul Mishra</p>
+                        <p className="text-xs text-gray-500 mt-1">South Delhi</p>
                       </td>
-                      <td className="px-8 py-6">
-                        <span className="bg-green-100 text-green-700 px-3 py-1 rounded-full text-xs font-bold uppercase">Completed</span>
+                      <td className="px-6 py-4">
+                        <span className="bg-green-100 text-green-700 px-2.5 py-1 rounded-md text-xs font-bold uppercase tracking-wider">Completed</span>
                       </td>
-                      <td className="px-8 py-6 font-black">₹2,499</td>
+                      <td className="px-6 py-4 font-bold text-black text-sm">₹2,499</td>
                     </tr>
                   ))}
                 </tbody>
@@ -118,47 +114,46 @@ const AdminDashboard = () => {
 
           {/* Critical Alerts */}
           <div className="space-y-6">
-            <div className="bg-white rounded-[40px] border border-border p-8 shadow-xl">
-              <h3 className="text-xl font-bold mb-6 flex items-center gap-2">
+            <div className="bg-white rounded-xl border border-gray-200 p-6 shadow-sm">
+              <h3 className="text-lg font-bold mb-6 flex items-center gap-2 text-black">
                 <AlertCircle className="text-red-500" /> Pending KYC
               </h3>
-              <div className="space-y-6">
+              <div className="space-y-4">
                 {[1, 2, 3].map((i) => (
-                  <div key={i} className="flex items-center gap-4 group cursor-pointer">
-                    <div className="w-12 h-12 rounded-2xl bg-slate-100 overflow-hidden">
+                  <div key={i} className="flex items-center gap-3 cursor-pointer p-2 hover:bg-gray-50 rounded-lg transition-colors border border-transparent hover:border-gray-200">
+                    <div className="w-10 h-10 rounded-lg bg-gray-100 overflow-hidden">
                       <img src={`https://i.pravatar.cc/150?u=${i}`} alt="Partner" />
                     </div>
                     <div className="flex-1">
-                      <h4 className="font-bold text-sm">Sunil Electricals</h4>
-                      <p className="text-xs text-muted-foreground">Applied 2h ago</p>
+                      <h4 className="font-bold text-sm text-black">Sunil Electricals</h4>
+                      <p className="text-xs text-gray-500 mt-0.5">Applied 2h ago</p>
                     </div>
-                    <button className="p-2 hover:bg-primary/10 rounded-lg text-primary transition-all">
-                      <Plus size={20} />
+                    <button className="p-1.5 hover:bg-gray-200 rounded-md text-black transition-colors">
+                      <Plus size={18} />
                     </button>
                   </div>
                 ))}
               </div>
-              <button className="w-full mt-8 py-4 bg-slate-900 text-white rounded-2xl font-bold text-sm hover:bg-slate-800 transition-all">
+              <button className="w-full mt-6 py-3 bg-gray-100 text-black rounded-lg font-semibold text-sm hover:bg-gray-200 transition-colors border border-gray-200">
                 Review All Applications
               </button>
             </div>
 
-            <div className="bg-primary rounded-[40px] p-8 text-white shadow-2xl relative overflow-hidden">
-              <h3 className="text-lg font-bold mb-4 relative z-10">System Status</h3>
-              <div className="space-y-4 relative z-10">
+            <div className="bg-black rounded-xl p-6 text-white shadow-sm border border-gray-800">
+              <h3 className="text-base font-bold mb-4">System Status</h3>
+              <div className="space-y-4">
                 <div className="flex justify-between items-center text-sm">
-                  <span className="opacity-70">Server Latency</span>
+                  <span className="text-gray-400">Server Latency</span>
                   <span className="font-bold">24ms</span>
                 </div>
                 <div className="flex justify-between items-center text-sm">
-                  <span className="opacity-70">Success Rate</span>
+                  <span className="text-gray-400">Success Rate</span>
                   <span className="font-bold">99.98%</span>
                 </div>
-                <div className="w-full h-1.5 bg-white/20 rounded-full mt-4">
-                  <div className="w-[95%] h-full bg-white rounded-full" />
+                <div className="w-full h-1.5 bg-gray-800 rounded-full mt-4 overflow-hidden">
+                  <div className="w-[95%] h-full bg-green-500 rounded-full" />
                 </div>
               </div>
-              <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full translate-x-1/2 -translate-y-1/2 blur-2xl" />
             </div>
           </div>
         </div>

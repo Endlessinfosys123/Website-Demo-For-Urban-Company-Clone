@@ -1,23 +1,22 @@
 'use client';
 
 import React from 'react';
-import { motion } from 'framer-motion';
 
 const steps = [
   {
-    number: '01',
+    number: '1',
     title: 'Choose a service',
     desc: 'Select from over 50+ professional services for your home and lifestyle.',
     image: 'https://cdn-icons-png.flaticon.com/512/3063/3063822.png'
   },
   {
-    number: '02',
+    number: '2',
     title: 'Book a slot',
     desc: 'Pick a date and time that works best for you. Our pro will arrive on time.',
     image: 'https://cdn-icons-png.flaticon.com/512/3652/3652191.png'
   },
   {
-    number: '03',
+    number: '3',
     title: 'Relax and enjoy',
     desc: 'Our expert takes care of the work while you focus on what matters to you.',
     image: 'https://cdn-icons-png.flaticon.com/512/1048/1048953.png'
@@ -26,42 +25,38 @@ const steps = [
 
 const HowItWorks = () => {
   return (
-    <section className="py-32 bg-white overflow-hidden">
-      <div className="container mx-auto px-4 md:px-6">
-        <div className="text-center mb-24">
-          <span className="text-primary font-black uppercase tracking-[0.3em] text-[11px] mb-6 block">The Process</span>
-          <h2 className="text-5xl md:text-6xl font-black text-slate-900 mb-6">Simple 3-Step Booking.</h2>
-          <p className="text-xl text-slate-500 font-bold max-w-2xl mx-auto leading-relaxed">
-            We've streamlined the way you book home services. Fast, efficient, and 100% transparent.
+    <section className="py-24 bg-white border-t border-gray-100 overflow-hidden">
+      <div className="max-w-6xl mx-auto px-4 md:px-6">
+        <div className="text-center mb-16">
+          <h2 className="text-3xl md:text-4xl font-bold text-black mb-4">Simple 3-Step Booking</h2>
+          <p className="text-sm text-gray-500 font-medium max-w-2xl mx-auto leading-relaxed">
+            We've streamlined the way you book home services. Fast, efficient, and transparent.
           </p>
         </div>
 
         <div className="relative">
           {/* Decorative Background Elements */}
-          <div className="absolute top-1/2 left-0 w-full h-1 bg-slate-100 -translate-y-1/2 hidden lg:block" />
+          <div className="absolute top-1/2 left-0 w-full h-px bg-gray-200 -translate-y-1/2 hidden lg:block" />
           
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-20 relative z-10">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-12 relative z-10">
             {steps.map((step, index) => (
-              <motion.div 
+              <div 
                 key={index} 
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.2 }}
-                className="flex flex-col items-center text-center group"
+                className="flex flex-col items-center text-center group bg-white"
               >
-                <div className="relative mb-12">
-                  <div className="w-52 h-52 bg-white rounded-[60px] flex items-center justify-center border-4 border-slate-100 group-hover:border-primary transition-all duration-700 shadow-2xl shadow-slate-900/5 group-hover:scale-110 group-hover:rotate-6">
-                    <img src={step.image} alt={step.title} className="w-24 h-24 grayscale group-hover:grayscale-0 transition-all duration-700" />
+                <div className="relative mb-8">
+                  <div className="w-40 h-40 bg-gray-50 rounded-2xl flex items-center justify-center border border-gray-200 group-hover:border-black transition-colors">
+                    <img src={step.image} alt={step.title} className="w-16 h-16 grayscale group-hover:grayscale-0 transition-all opacity-80" />
                   </div>
-                  <div className="absolute -top-4 -right-4 w-16 h-16 bg-slate-900 text-white rounded-3xl flex items-center justify-center font-black text-xl shadow-2xl group-hover:bg-primary transition-colors">
+                  <div className="absolute -top-3 -right-3 w-10 h-10 bg-black text-white rounded-xl flex items-center justify-center font-bold text-lg shadow-sm">
                     {step.number}
                   </div>
                 </div>
-                <h3 className="text-3xl font-black mb-4 text-slate-900 group-hover:text-primary transition-colors">{step.title}</h3>
-                <p className="text-slate-500 font-bold leading-relaxed max-w-[300px]">
+                <h3 className="text-xl font-bold mb-3 text-black">{step.title}</h3>
+                <p className="text-gray-500 text-sm font-medium leading-relaxed max-w-[250px]">
                   {step.desc}
                 </p>
-              </motion.div>
+              </div>
             ))}
           </div>
         </div>

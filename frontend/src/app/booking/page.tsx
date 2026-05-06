@@ -1,35 +1,20 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  Calendar, Clock, MapPin, 
-  CreditCard, ChevronRight, ChevronLeft, 
-  CheckCircle2, Star, ShieldCheck, 
-  Smartphone, User, Mail, Home, Trash2
-} from 'lucide-react';
+import { ChevronLeft, MapPin, Clock, CreditCard, ShieldCheck, CheckCircle2, Trash2, Home, ShoppingCart } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useCartStore } from '@/store/useCartStore';
 
-const steps = [
-  { id: 1, name: 'Service Info', icon: <Home size={20} /> },
-  { id: 2, name: 'Schedule', icon: <Calendar size={20} /> },
-  { id: 3, name: 'Address', icon: <MapPin size={20} /> },
-  { id: 4, name: 'Payment', icon: <CreditCard size={20} /> },
-];
-
 const BookingPage = () => {
   const router = useRouter();
   const { items, getTotal, removeItem, clearCart } = useCartStore();
-  const [currentStep, setCurrentStep] = useState(1);
+  const [step, setStep] = useState(1);
   const [isClient, setIsClient] = useState(false);
-  const [formData, setFormData] = useState({
-    date: '',
-    time: '',
-    addressType: 'home',
-    paymentMethod: 'razorpay'
-  });
+  const [selectedDate, setSelectedDate] = useState('');
+  const [selectedSlot, setSelectedSlot] = useState('');
+  const [selectedAddress, setSelectedAddress] = useState(0);
+  const [selectedPayment, setSelectedPayment] = useState('online');
 
   useEffect(() => {
     setIsClient(true);
@@ -39,249 +24,283 @@ const BookingPage = () => {
   const platformFee = items.length > 0 ? 49 : 0;
   const total = subtotal + platformFee;
 
-  const nextStep = () => setCurrentStep(prev => Math.min(prev + 1, steps.length));
-  const prevStep = () => setCurrentStep(prev => Math.max(prev - 1, 1));
+  const nextStep = () => setStep(s => Math.min(s + 1, 4));
+
+  const addresses = [
+    { type: 'Home', text: 'B-12, Green Park Extension, Near Metro Station, New Delhi - 110016' },
+    { type: 'Work', text: 'Floor 4, Tech Park, Sector 44, Gurugram - 122003' }
+  ];
+
+  const dates = ['Today', 'Tomorrow', '14 May', '15 May', '16 May'];
+  const slots = ['09:00 AM', '11:00 AM', '02:00 PM', '04:00 PM', '06:00 PM'];
 
   const handleBookingConfirm = () => {
-    // Simulate booking success
-    alert('Booking Confirmed Successfully!');
     clearCart();
-    router.push('/');
+    setStep(4);
   };
 
   if (!isClient) return null;
 
-  if (items.length === 0 && currentStep === 1) {
+  if (items.length === 0 && step !== 4) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center bg-slate-50 p-4">
-        <div className="w-24 h-24 bg-slate-200 rounded-full flex items-center justify-center mb-6">
-          <Trash2 size={48} className="text-slate-400" />
+      <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50 p-4">
+        <div className="w-24 h-24 bg-gray-200 rounded-full flex items-center justify-center mb-6">
+          <ShoppingCart size={48} className="text-gray-400" />
         </div>
         <h2 className="text-2xl font-bold mb-2">Your cart is empty</h2>
-        <p className="text-slate-500 mb-8">Add some services to get started!</p>
-        <Link href="/" className="bg-primary text-white px-8 py-4 rounded-2xl font-bold shadow-xl shadow-primary/20">
+        <p className="text-gray-500 mb-8">Add some services to get started!</p>
+        <Link href="/" className="bg-black text-white px-8 py-3 rounded-lg font-semibold hover:bg-gray-800 transition-colors">
           Explore Services
         </Link>
       </div>
     );
   }
 
+  if (step === 4) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
+        <div className="bg-white p-8 rounded-2xl shadow-sm border border-gray-200 max-w-md w-full text-center">
+          <div className="w-16 h-16 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto mb-6">
+            <CheckCircle2 size={32} />
+          </div>
+          <h2 className="text-2xl font-bold text-black mb-2">Booking Confirmed!</h2>
+          <p className="text-gray-600 mb-6">
+            Your service is scheduled for <span className="font-semibold text-black">{selectedDate}</span> at <span className="font-semibold text-black">{selectedSlot}</span>.
+          </p>
+          <div className="bg-gray-50 rounded-xl p-4 text-left mb-8 border border-gray-100">
+             <div className="flex justify-between mb-2">
+               <span className="text-gray-500 text-sm">Booking ID</span>
+               <span className="font-bold text-black text-sm">#UC-62184</span>
+             </div>
+             <div className="flex justify-between">
+               <span className="text-gray-500 text-sm">Total Paid</span>
+               <span className="font-bold text-black text-sm">₹{total}</span>
+             </div>
+          </div>
+          <Link href="/customer/dashboard">
+            <button className="w-full py-3 bg-black text-white font-semibold rounded-lg hover:bg-gray-800 transition-colors">
+              Go to Dashboard
+            </button>
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className="min-h-screen bg-[#f8fafc] pt-24 pb-20">
-      <div className="container mx-auto px-4 max-w-6xl">
-        <div className="grid lg:grid-cols-3 gap-12">
-          {/* Left: Form */}
-          <div className="lg:col-span-2">
-            {/* Step Progress */}
-            <div className="flex items-center justify-between mb-12 bg-white p-6 rounded-[30px] shadow-sm border border-slate-100">
-              {steps.map((step, i) => (
-                <div key={step.id} className="flex items-center group">
-                  <div className={`flex flex-col items-center gap-2 transition-all ${
-                    currentStep >= step.id ? 'text-primary' : 'text-slate-400'
-                  }`}>
-                    <div className={`w-12 h-12 rounded-2xl flex items-center justify-center transition-all ${
-                      currentStep >= step.id 
-                        ? 'bg-primary text-white shadow-lg shadow-primary/20 scale-110' 
-                        : 'bg-slate-100'
-                    }`}>
-                      {step.icon}
-                    </div>
-                    <span className="text-[10px] font-bold uppercase tracking-widest">{step.name}</span>
-                  </div>
-                  {i < steps.length - 1 && (
-                    <div className={`w-12 md:w-20 h-1 mx-4 rounded-full transition-all ${
-                      currentStep > step.id ? 'bg-primary' : 'bg-slate-100'
-                    }`} />
-                  )}
+    <div className="min-h-screen bg-white">
+      {/* Header */}
+      <header className="bg-white border-b border-gray-200 sticky top-0 z-50">
+        <div className="max-w-5xl mx-auto px-4 py-4 flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <button onClick={() => router.back()} className="text-gray-500 hover:text-black">
+              <ChevronLeft size={24} />
+            </button>
+            <h1 className="text-xl font-bold text-black">Checkout</h1>
+          </div>
+        </div>
+      </header>
+
+      <main className="max-w-5xl mx-auto px-4 py-8">
+        <div className="flex flex-col lg:flex-row gap-8">
+          
+          {/* Main Checkout Flow */}
+          <div className="flex-1 space-y-6">
+            
+            {/* Step 1: Address */}
+            <div className={`border border-gray-200 rounded-xl overflow-hidden ${step === 1 ? 'shadow-sm' : ''}`}>
+              <div className="bg-gray-50 px-6 py-4 border-b border-gray-200 flex justify-between items-center cursor-pointer" onClick={() => step > 1 && setStep(1)}>
+                <div className="flex items-center gap-3">
+                  <MapPin className={step === 1 ? 'text-black' : 'text-gray-400'} size={20} />
+                  <h2 className={`font-bold ${step === 1 ? 'text-black' : 'text-gray-600'}`}>1. Service Address</h2>
                 </div>
-              ))}
+                {step > 1 && <span className="text-sm font-semibold text-gray-500">{addresses[selectedAddress].type}</span>}
+              </div>
+              
+              {step === 1 && (
+                <div className="p-6 bg-white">
+                  <div className="space-y-4 mb-6">
+                    {addresses.map((addr, i) => (
+                      <div 
+                        key={i} 
+                        onClick={() => setSelectedAddress(i)}
+                        className={`p-4 border rounded-lg cursor-pointer flex gap-4 transition-colors ${
+                          selectedAddress === i ? 'border-black bg-gray-50' : 'border-gray-200 hover:border-gray-300'
+                        }`}
+                      >
+                        <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0 mt-0.5 ${
+                          selectedAddress === i ? 'border-black' : 'border-gray-300'
+                        }`}>
+                          {selectedAddress === i && <div className="w-2.5 h-2.5 bg-black rounded-full" />}
+                        </div>
+                        <div>
+                          <p className="font-bold text-black text-sm mb-1">{addr.type}</p>
+                          <p className="text-gray-600 text-sm leading-relaxed">{addr.text}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                  <button className="text-black font-semibold text-sm hover:underline mb-8">+ Add new address</button>
+                  <div>
+                    <button onClick={nextStep} className="px-8 py-3 bg-black text-white font-semibold rounded-lg hover:bg-gray-800 transition-colors">
+                      Continue to Schedule
+                    </button>
+                  </div>
+                </div>
+              )}
             </div>
 
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={currentStep}
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -20 }}
-                className="bg-white rounded-[40px] p-8 md:p-12 shadow-xl border border-slate-100 min-h-[500px] flex flex-col"
-              >
-                {currentStep === 1 && (
-                  <div className="space-y-8">
-                    <div>
-                      <h2 className="text-3xl font-bold mb-2">Review Services</h2>
-                      <p className="text-slate-500">Confirm the items in your booking</p>
-                    </div>
-                    <div className="space-y-4">
-                      {items.map((item) => (
-                        <div key={item.id} className="bg-slate-50 p-6 rounded-3xl border border-slate-100 flex items-center justify-between group">
-                          <div className="flex items-center gap-4">
-                             <div className="w-16 h-16 bg-white rounded-2xl flex items-center justify-center text-3xl shadow-sm">
-                               {item.image}
-                             </div>
-                             <div>
-                                <h4 className="font-bold text-lg">{item.name}</h4>
-                                <p className="text-xs text-slate-400 uppercase tracking-widest">{item.category}</p>
-                             </div>
-                          </div>
-                          <div className="flex items-center gap-6">
-                             <div className="text-xl font-black text-slate-900">₹{item.price}</div>
-                             <button 
-                              onClick={() => removeItem(item.id)}
-                              className="p-2 text-slate-300 hover:text-red-500 transition-colors"
-                             >
-                               <Trash2 size={20} />
-                             </button>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                {currentStep === 2 && (
-                  <div className="space-y-8">
-                    <div>
-                      <h2 className="text-3xl font-bold mb-2">When should we arrive?</h2>
-                      <p className="text-slate-500">Select a date and time slot for your service.</p>
-                    </div>
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                      {['May 15', 'May 16', 'May 17', 'May 18'].map((date) => (
-                        <button
-                          key={date}
-                          onClick={() => setFormData({...formData, date})}
-                          className={`p-4 rounded-2xl border-2 transition-all ${
-                            formData.date === date ? 'border-primary bg-primary/5' : 'border-slate-100 hover:border-primary/50'
-                          }`}
-                        >
-                          <div className="text-sm font-bold">{date}</div>
-                          <div className="text-[10px] uppercase text-slate-400 mt-1">Available</div>
-                        </button>
-                      ))}
-                    </div>
-                    <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mt-8">
-                      {['08:00 AM', '10:00 AM', '02:00 PM', '04:00 PM'].map((time) => (
-                        <button
-                          key={time}
-                          onClick={() => setFormData({...formData, time})}
-                          className={`p-4 rounded-2xl border-2 transition-all flex items-center gap-3 ${
-                            formData.time === time ? 'border-primary bg-primary/5' : 'border-slate-100 hover:border-primary/50'
-                          }`}
-                        >
-                          <Clock size={16} className={formData.time === time ? 'text-primary' : 'text-slate-400'} />
-                          <span className="font-bold text-sm">{time}</span>
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                {currentStep === 3 && (
-                  <div className="space-y-8">
-                    <div>
-                      <h2 className="text-3xl font-bold mb-2">Service Address</h2>
-                      <p className="text-slate-500">Where should our professional arrive?</p>
-                    </div>
-                    <div className="space-y-4">
-                      <div className="grid grid-cols-2 gap-4">
-                        <button className="flex items-center gap-3 p-6 rounded-3xl border-2 border-primary bg-primary/5 font-bold">
-                          <Home className="text-primary" /> Home
-                        </button>
-                        <button className="flex items-center gap-3 p-6 rounded-3xl border-2 border-slate-100 hover:border-primary/50 font-bold text-slate-500">
-                          <Smartphone /> Office
-                        </button>
-                      </div>
-                      <div className="space-y-4">
-                        <input type="text" placeholder="House / Flat No." className="w-full p-4 rounded-2xl border border-slate-200 focus:ring-2 focus:ring-primary/20 outline-none" />
-                        <input type="text" placeholder="Landmark (Optional)" className="w-full p-4 rounded-2xl border border-slate-200 focus:ring-2 focus:ring-primary/20 outline-none" />
-                        <div className="p-4 bg-slate-50 rounded-2xl text-xs text-slate-500 flex items-center gap-2">
-                          <MapPin size={14} /> New Delhi, South Delhi, Green Park - 110016
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                )}
-
-                {currentStep === 4 && (
-                  <div className="space-y-8 text-center py-8">
-                    <div className="w-24 h-24 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-6">
-                      <ShieldCheck size={48} className="text-primary" />
-                    </div>
-                    <div>
-                      <h2 className="text-3xl font-bold mb-2">Secure Payment</h2>
-                      <p className="text-slate-500">Choose your preferred payment method</p>
-                    </div>
-                    <div className="grid gap-4 max-w-md mx-auto">
-                      <button className="flex items-center justify-between p-6 rounded-3xl border-2 border-primary bg-primary/5 font-bold">
-                        <div className="flex items-center gap-4">
-                          <CreditCard className="text-primary" /> Pay via Card/UPI
-                        </div>
-                        <div className="flex gap-1">
-                          <div className="w-6 h-4 bg-slate-200 rounded" />
-                          <div className="w-6 h-4 bg-slate-300 rounded" />
-                        </div>
-                      </button>
-                      <button className="flex items-center justify-between p-6 rounded-3xl border-2 border-slate-100 hover:border-primary/50 font-bold text-slate-500">
-                        <div className="flex items-center gap-4">
-                          <Smartphone /> Cash after service
-                        </div>
-                      </button>
-                    </div>
-                  </div>
-                )}
-
-                <div className="mt-auto pt-12 flex items-center justify-between border-t border-slate-100">
-                  <button 
-                    onClick={prevStep}
-                    disabled={currentStep === 1}
-                    className="flex items-center gap-2 font-bold text-slate-400 hover:text-primary transition-colors disabled:opacity-0"
-                  >
-                    <ChevronLeft size={20} /> Back
-                  </button>
-                  <button 
-                    onClick={currentStep === steps.length ? handleBookingConfirm : nextStep}
-                    className="bg-primary text-white px-10 py-4 rounded-2xl font-bold flex items-center gap-2 hover:bg-primary/90 transition-all shadow-xl shadow-primary/20 active:scale-95"
-                  >
-                    {currentStep === steps.length ? 'Confirm Booking' : 'Next Step'} <ChevronRight size={20} />
-                  </button>
+            {/* Step 2: Date & Time */}
+            <div className={`border border-gray-200 rounded-xl overflow-hidden ${step === 2 ? 'shadow-sm' : ''}`}>
+              <div className="bg-gray-50 px-6 py-4 border-b border-gray-200 flex justify-between items-center cursor-pointer" onClick={() => step > 2 && setStep(2)}>
+                <div className="flex items-center gap-3">
+                  <Clock className={step === 2 ? 'text-black' : 'text-gray-400'} size={20} />
+                  <h2 className={`font-bold ${step === 2 ? 'text-black' : 'text-gray-600'}`}>2. Schedule</h2>
                 </div>
-              </motion.div>
-            </AnimatePresence>
+                {step > 2 && <span className="text-sm font-semibold text-gray-500">{selectedDate}, {selectedSlot}</span>}
+              </div>
+              
+              {step === 2 && (
+                <div className="p-6 bg-white">
+                  <div className="mb-8">
+                    <p className="text-sm font-bold text-black mb-3">Select Date</p>
+                    <div className="flex gap-3 overflow-x-auto pb-2">
+                      {dates.map((date, i) => (
+                        <button
+                          key={i}
+                          onClick={() => setSelectedDate(date)}
+                          className={`px-4 py-3 border rounded-lg whitespace-nowrap text-sm font-semibold transition-colors ${
+                            selectedDate === date ? 'border-black bg-gray-50 text-black' : 'border-gray-200 text-gray-600 hover:border-gray-300'
+                          }`}
+                        >
+                          {date}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="mb-8">
+                    <p className="text-sm font-bold text-black mb-3">Select Time</p>
+                    <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                      {slots.map((slot, i) => (
+                        <button
+                          key={i}
+                          onClick={() => setSelectedSlot(slot)}
+                          className={`py-3 border rounded-lg text-sm font-semibold transition-colors ${
+                            selectedSlot === slot ? 'border-black bg-gray-50 text-black' : 'border-gray-200 text-gray-600 hover:border-gray-300'
+                          }`}
+                        >
+                          {slot}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div>
+                    <button 
+                      onClick={nextStep} 
+                      disabled={!selectedDate || !selectedSlot}
+                      className="px-8 py-3 bg-black text-white font-semibold rounded-lg hover:bg-gray-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      Continue to Payment
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Step 3: Payment */}
+            <div className={`border border-gray-200 rounded-xl overflow-hidden ${step === 3 ? 'shadow-sm' : ''}`}>
+              <div className="bg-gray-50 px-6 py-4 border-b border-gray-200 flex justify-between items-center">
+                <div className="flex items-center gap-3">
+                  <CreditCard className={step === 3 ? 'text-black' : 'text-gray-400'} size={20} />
+                  <h2 className={`font-bold ${step === 3 ? 'text-black' : 'text-gray-600'}`}>3. Payment</h2>
+                </div>
+              </div>
+              
+              {step === 3 && (
+                <div className="p-6 bg-white">
+                  <div className="space-y-4 mb-8">
+                    {[
+                      { id: 'online', name: 'Pay via UPI / Cards / NetBanking' },
+                      { id: 'cash', name: 'Pay with Cash after service' }
+                    ].map((method) => (
+                      <div 
+                        key={method.id} 
+                        onClick={() => setSelectedPayment(method.id)}
+                        className={`p-4 border rounded-lg cursor-pointer flex gap-4 items-center transition-colors ${
+                          selectedPayment === method.id ? 'border-black bg-gray-50' : 'border-gray-200 hover:border-gray-300'
+                        }`}
+                      >
+                         <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0 ${
+                          selectedPayment === method.id ? 'border-black' : 'border-gray-300'
+                        }`}>
+                          {selectedPayment === method.id && <div className="w-2.5 h-2.5 bg-black rounded-full" />}
+                        </div>
+                        <span className="font-semibold text-black text-sm">{method.name}</span>
+                      </div>
+                    ))}
+                  </div>
+
+                  <div>
+                    <button onClick={handleBookingConfirm} className="w-full md:w-auto px-8 py-3 bg-black text-white font-semibold rounded-lg hover:bg-gray-800 transition-colors">
+                      Place Order
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+
           </div>
 
-          {/* Right: Summary */}
-          <div className="space-y-6">
-            <div className="bg-white rounded-[40px] p-8 shadow-xl border border-slate-100 sticky top-24">
-              <h3 className="text-xl font-bold mb-8">Payment Summary</h3>
-              <div className="space-y-6">
-                <div className="flex justify-between items-center text-sm">
-                  <span className="text-slate-500">Item Total ({items.length} items)</span>
-                  <span className="font-bold">₹{subtotal}</span>
+          {/* Right Sidebar: Order Summary */}
+          <aside className="lg:w-80">
+            <div className="bg-white border border-gray-200 rounded-xl p-6 sticky top-24">
+              <h3 className="font-bold text-black mb-4">Payment Summary</h3>
+              
+              <div className="space-y-3 mb-6 max-h-[300px] overflow-y-auto pr-2">
+                {items.map((item) => (
+                  <div key={item.id} className="flex justify-between text-sm group">
+                    <div className="flex items-center gap-2">
+                      <span className="text-gray-600 flex-1">{item.name}</span>
+                      <button onClick={() => removeItem(item.id)} className="text-gray-300 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <Trash2 size={14} />
+                      </button>
+                    </div>
+                    <span className="font-medium text-black">₹{item.price}</span>
+                  </div>
+                ))}
+              </div>
+
+              <div className="border-t border-gray-200 pt-4 space-y-3 mb-6">
+                <div className="flex justify-between text-sm">
+                  <span className="text-gray-600">Item Total</span>
+                  <span className="font-medium text-black">₹{subtotal}</span>
                 </div>
-                <div className="flex justify-between items-center text-sm">
-                  <span className="text-slate-500">Conveyance Fee</span>
-                  <span className="font-bold text-green-600">FREE</span>
-                </div>
-                <div className="flex justify-between items-center text-sm">
-                  <span className="text-slate-500">Platform Fee</span>
-                  <span className="font-bold">₹{platformFee}</span>
-                </div>
-                <div className="h-px bg-slate-100" />
-                <div className="flex justify-between items-center">
-                  <span className="text-lg font-bold">Amount Payable</span>
-                  <span className="text-2xl font-black text-primary">₹{total}</span>
+                <div className="flex justify-between text-sm">
+                  <span className="text-gray-600">Platform Fee</span>
+                  <span className="font-medium text-black">₹{platformFee}</span>
                 </div>
               </div>
 
-              <div className="mt-8 p-4 bg-green-50 rounded-2xl flex items-start gap-3">
-                <ShieldCheck className="text-green-600 shrink-0 mt-0.5" size={18} />
-                <p className="text-[10px] text-green-700 font-medium leading-relaxed">
-                  UC Promise: Background verified professionals with high quality standards. Free insurance up to ₹10,000 included.
+              <div className="border-t border-gray-200 pt-4 mb-6">
+                <div className="flex justify-between items-center">
+                  <span className="font-bold text-black">Total to pay</span>
+                  <span className="font-bold text-black text-lg">₹{total}</span>
+                </div>
+              </div>
+
+              <div className="bg-gray-50 p-4 rounded-lg flex gap-3 items-start">
+                <ShieldCheck className="text-green-600 shrink-0" size={18} />
+                <p className="text-xs text-gray-600 leading-relaxed">
+                  <span className="font-bold text-black">UC Promise:</span> Verified professionals and 30-day service guarantee.
                 </p>
               </div>
             </div>
-          </div>
+          </aside>
+
         </div>
-      </div>
+      </main>
     </div>
   );
 };

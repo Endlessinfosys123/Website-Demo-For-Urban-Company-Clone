@@ -4,14 +4,14 @@ import { Mail, Phone, MapPin } from 'lucide-react';
 
 const Footer = () => {
   return (
-    <footer className="bg-slate-950 text-white pt-32 pb-16">
+    <footer className="bg-black text-white pt-20 pb-10">
       <div className="container mx-auto px-4 md:px-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-16 mb-24">
-          <div className="space-y-10">
-            <Link href="/" className="text-3xl font-black tracking-tighter text-white flex items-center gap-1">
-              URBAN<span className="text-primary">CLONE</span>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
+          <div className="space-y-6">
+            <Link href="/" className="text-2xl font-bold tracking-tight text-white flex items-center">
+              UrbanCompany
             </Link>
-            <p className="text-slate-400 font-bold leading-relaxed">
+            <p className="text-gray-400 font-medium text-sm leading-relaxed">
               India's most trusted home services platform. Professional experts, guaranteed quality, and background verified professionals.
             </p>
             <div className="flex items-center gap-4">
@@ -29,17 +29,17 @@ const Footer = () => {
                   path: 'M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z' 
                 }
               ].map((social, i) => (
-                <Link key={i} href="#" className="w-12 h-12 bg-white/5 border border-white/10 rounded-2xl flex items-center justify-center hover:bg-primary hover:border-primary transition-all group">
+                <Link key={i} href="/" className="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center hover:bg-white hover:text-black transition-all group">
                   <svg 
-                    width="20" 
-                    height="20" 
+                    width="18" 
+                    height="18" 
                     viewBox="0 0 24 24" 
                     fill="none" 
                     stroke="currentColor" 
                     strokeWidth="2" 
                     strokeLinecap="round" 
                     strokeLinejoin="round" 
-                    className="text-slate-400 group-hover:text-white"
+                    className="text-gray-300 group-hover:text-black"
                   >
                     <path d={social.path} />
                     {social.name === 'Instagram' && <rect width="20" height="20" x="2" y="2" rx="5" ry="5" />}
@@ -50,72 +50,76 @@ const Footer = () => {
           </div>
 
           <div>
-            <h4 className="text-lg font-black uppercase tracking-widest text-primary mb-10">Company</h4>
-            <ul className="space-y-6">
-              {['About Us', 'Terms & Conditions', 'Privacy Policy', 'Careers', 'UC Impact'].map((item) => (
-                <li key={item}>
-                  <Link href="#" className="text-slate-400 hover:text-white transition-colors font-bold text-sm">{item}</Link>
+            <h4 className="text-sm font-bold uppercase tracking-wider text-white mb-6">Company</h4>
+            <ul className="space-y-4">
+              {[
+                { name: 'About Us', href: '/about' },
+                { name: 'Terms & Conditions', href: '/terms' },
+                { name: 'Privacy Policy', href: '/privacy' },
+                { name: 'Careers', href: '/careers' },
+                { name: 'UC Impact', href: '/impact' }
+              ].map((item) => (
+                <li key={item.name}>
+                  <Link href={item.href} className="text-gray-400 hover:text-white transition-colors font-medium text-sm">{item.name}</Link>
                 </li>
               ))}
             </ul>
           </div>
 
           <div>
-            <h4 className="text-lg font-black uppercase tracking-widest text-primary mb-10">For Customers</h4>
-            <ul className="space-y-6">
-              {['UC Reviews', 'Categories Near You', 'Blog', 'Contact Us', 'Help Center'].map((item) => (
-                <li key={item}>
-                  <Link href="#" className="text-slate-400 hover:text-white transition-colors font-bold text-sm">{item}</Link>
+            <h4 className="text-sm font-bold uppercase tracking-wider text-white mb-6">For Customers</h4>
+            <ul className="space-y-4">
+              {[
+                { name: 'UC Reviews', href: '/reviews' },
+                { name: 'Categories Near You', href: '/services' },
+                { name: 'Blog', href: '/blog' },
+                { name: 'Contact Us', href: '/contact' },
+                { name: 'Help Center', href: '/help' }
+              ].map((item) => (
+                <li key={item.name}>
+                  <Link href={item.href} className="text-gray-400 hover:text-white transition-colors font-medium text-sm">{item.name}</Link>
                 </li>
               ))}
             </ul>
           </div>
 
           <div>
-            <h4 className="text-lg font-black uppercase tracking-widest text-primary mb-10">Contact Us</h4>
-            <ul className="space-y-6">
-              <li className="flex items-center gap-4">
-                <div className="w-10 h-10 bg-white/5 rounded-xl flex items-center justify-center text-primary border border-white/10">
-                  <Phone size={18} />
+            <h4 className="text-sm font-bold uppercase tracking-wider text-white mb-6">Contact Us</h4>
+            <ul className="space-y-4">
+              <li className="flex items-center gap-3">
+                <div className="text-gray-400">
+                  <Phone size={16} />
                 </div>
-                <span className="text-slate-400 font-bold text-sm">+91 1800-419-419</span>
+                <span className="text-gray-400 font-medium text-sm">+91 1800-419-419</span>
               </li>
-              <li className="flex items-center gap-4">
-                <div className="w-10 h-10 bg-white/5 rounded-xl flex items-center justify-center text-primary border border-white/10">
-                  <Mail size={18} />
+              <li className="flex items-center gap-3">
+                <div className="text-gray-400">
+                  <Mail size={16} />
                 </div>
-                <span className="text-slate-400 font-bold text-sm">support@urbanclone.com</span>
+                <span className="text-gray-400 font-medium text-sm">support@urbanclone.com</span>
               </li>
-              <li className="flex items-center gap-4">
-                <div className="w-10 h-10 bg-white/5 rounded-xl flex items-center justify-center text-primary border border-white/10">
-                  <MapPin size={18} />
+              <li className="flex items-center gap-3">
+                <div className="text-gray-400">
+                  <MapPin size={16} />
                 </div>
-                <span className="text-slate-400 font-bold text-sm">South Delhi, New Delhi - 110016</span>
+                <span className="text-gray-400 font-medium text-sm">South Delhi, New Delhi - 110016</span>
               </li>
             </ul>
           </div>
         </div>
 
-        <div className="border-t border-white/10 pt-16 flex flex-col md:flex-row items-center justify-between gap-10">
-          <div className="flex flex-col md:flex-row items-center gap-10">
-            <p className="text-slate-500 font-bold text-sm">
-              © 2024 UrbanClone Technologies Ltd. All rights reserved.
+        <div className="border-t border-white/10 pt-8 flex flex-col md:flex-row items-center justify-between gap-6">
+          <div className="flex flex-col md:flex-row items-center gap-6">
+            <p className="text-gray-500 font-medium text-xs">
+              © 2024 UrbanCompany Clone. All rights reserved.
             </p>
-            <div className="flex gap-6">
-               <span className="text-[10px] font-black uppercase tracking-widest text-slate-600">Secure Payments</span>
-               <div className="flex gap-2">
-                  <div className="w-8 h-5 bg-white/5 rounded" />
-                  <div className="w-8 h-5 bg-white/5 rounded" />
-                  <div className="w-8 h-5 bg-white/5 rounded" />
-               </div>
-            </div>
           </div>
-          <div className="flex items-center gap-6">
-            <Link href="#" className="group">
-              <img src="https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg" alt="Play Store" className="h-12 opacity-50 group-hover:opacity-100 transition-opacity" />
+          <div className="flex items-center gap-4">
+            <Link href="/" className="group">
+              <img src="https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg" alt="Play Store" className="h-10 opacity-70 group-hover:opacity-100 transition-opacity" />
             </Link>
-            <Link href="#" className="group">
-              <img src="https://upload.wikimedia.org/wikipedia/commons/3/3c/Download_on_the_App_Store_Badge.svg" alt="App Store" className="h-12 opacity-50 group-hover:opacity-100 transition-opacity" />
+            <Link href="/" className="group">
+              <img src="https://upload.wikimedia.org/wikipedia/commons/3/3c/Download_on_the_App_Store_Badge.svg" alt="App Store" className="h-10 opacity-70 group-hover:opacity-100 transition-opacity" />
             </Link>
           </div>
         </div>
