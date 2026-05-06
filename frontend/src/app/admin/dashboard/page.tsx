@@ -11,8 +11,50 @@ import {
 import { Badge } from '@/components/shared/DesignSystem';
 import Link from 'next/link';
 
+interface AdminUser {
+  id: number;
+  name: string;
+  email: string;
+  phone: string;
+  joined: string;
+  status: 'Active' | 'Suspended';
+}
+
 const AdminDashboard = () => {
   const [activeTab, setActiveTab] = useState('Overview');
+  const [isAddUserModalOpen, setIsAddUserModalOpen] = useState(false);
+  const [newUserName, setNewUserName] = useState('');
+  const [newUserEmail, setNewUserEmail] = useState('');
+
+  const [usersList, setUsersList] = useState<AdminUser[]>([
+    { id: 1, name: 'Customer Name 1', email: 'customer1@example.com', phone: '+91 98765 43211', joined: 'Oct 12, 2023', status: 'Active' },
+    { id: 2, name: 'Customer Name 2', email: 'customer2@example.com', phone: '+91 98765 43212', joined: 'Oct 15, 2023', status: 'Active' },
+  ]);
+
+  const handleAddUser = (e: React.FormEvent) => {
+    e.preventDefault();
+    const newUser: AdminUser = {
+      id: Date.now(),
+      name: newUserName,
+      email: newUserEmail,
+      phone: '+91 00000 00000',
+      joined: 'Just Now',
+      status: 'Active'
+    };
+    setUsersList([newUser, ...usersList]);
+    setIsAddUserModalOpen(false);
+    setNewUserName('');
+    setNewUserEmail('');
+  };
+
+  const handleToggleUserStatus = (id: number) => {
+    setUsersList(usersList.map(u => {
+      if (u.id === id) {
+        return { ...u, status: u.status === 'Active' ? 'Suspended' : 'Active' };
+      }
+      return u;
+    }));
+  };
 
   const metrics = [
     { label: 'Total Revenue', value: '₹12.54L', trend: '+18.2%', icon: <BarChart3 className="text-black" /> },
@@ -131,12 +173,34 @@ const AdminDashboard = () => {
 
   const renderUsers = () => (
     <div>
+      {isAddUserModalOpen && (
+        <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-[200] flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl w-full max-w-md p-6 shadow-xl border border-gray-200">
+            <h3 className="text-xl font-bold text-black mb-4">Add New User</h3>
+            <form onSubmit={handleAddUser} className="space-y-4">
+              <div>
+                <label className="block text-sm font-bold text-gray-700 mb-1">Full Name</label>
+                <input required type="text" value={newUserName} onChange={e=>setNewUserName(e.target.value)} className="w-full border border-gray-300 rounded-lg p-2 outline-none focus:border-black" placeholder="John Doe" />
+              </div>
+              <div>
+                <label className="block text-sm font-bold text-gray-700 mb-1">Email</label>
+                <input required type="email" value={newUserEmail} onChange={e=>setNewUserEmail(e.target.value)} className="w-full border border-gray-300 rounded-lg p-2 outline-none focus:border-black" placeholder="john@example.com" />
+              </div>
+              <div className="flex gap-3 pt-4">
+                <button type="button" onClick={() => setIsAddUserModalOpen(false)} className="flex-1 py-2 border border-gray-300 rounded-lg text-black font-bold hover:bg-gray-50">Cancel</button>
+                <button type="submit" className="flex-1 py-2 bg-black text-white rounded-lg font-bold hover:bg-gray-800">Save User</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
       <div className="flex justify-between items-center mb-8">
         <div>
           <h1 className="text-2xl font-bold text-black mb-1">User Management</h1>
           <p className="text-gray-500 text-sm font-medium">Manage all customer accounts.</p>
         </div>
-        <button className="px-4 py-2 bg-black text-white font-semibold rounded-lg text-sm hover:bg-gray-800 transition-colors flex items-center gap-2">
+        <button onClick={() => setIsAddUserModalOpen(true)} className="px-4 py-2 bg-black text-white font-semibold rounded-lg text-sm hover:bg-gray-800 transition-colors flex items-center gap-2">
           <Plus size={16} /> Add User
         </button>
       </div>
@@ -163,27 +227,27 @@ const AdminDashboard = () => {
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-100 bg-white">
-            {[1, 2, 3, 4, 5, 6].map((item) => (
-              <tr key={item} className="hover:bg-gray-50 transition-colors">
+            {usersList.map((item) => (
+              <tr key={item.id} className="hover:bg-gray-50 transition-colors">
                 <td className="px-6 py-4">
                   <div className="flex items-center gap-3">
                     <div className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center font-bold text-black text-xs">
-                      C{item}
+                      {item.name.charAt(0)}
                     </div>
                     <div>
-                      <p className="font-bold text-black text-sm">Customer Name {item}</p>
-                      <p className="text-xs text-gray-500">customer{item}@example.com</p>
+                      <p className="font-bold text-black text-sm">{item.name}</p>
+                      <p className="text-xs text-gray-500">{item.email}</p>
                     </div>
                   </div>
                 </td>
-                <td className="px-6 py-4 text-sm text-black font-medium">+91 98765 4321{item}</td>
-                <td className="px-6 py-4 text-sm text-gray-500 font-medium">Oct 12, 2023</td>
+                <td className="px-6 py-4 text-sm text-black font-medium">{item.phone}</td>
+                <td className="px-6 py-4 text-sm text-gray-500 font-medium">{item.joined}</td>
                 <td className="px-6 py-4">
-                  <Badge variant="success">Active</Badge>
+                  <Badge variant={item.status === 'Active' ? 'success' : 'danger'}>{item.status}</Badge>
                 </td>
                 <td className="px-6 py-4 text-right">
-                  <button className="text-gray-400 hover:text-black transition-colors p-1">
-                    <MoreVertical size={16} />
+                  <button onClick={() => handleToggleUserStatus(item.id)} className="text-sm font-bold text-blue-600 hover:underline">
+                    {item.status === 'Active' ? 'Suspend' : 'Activate'}
                   </button>
                 </td>
               </tr>
@@ -462,9 +526,9 @@ const AdminDashboard = () => {
         </nav>
 
         <div className="p-4 border-t border-gray-100">
-          <button className="flex items-center gap-3 text-red-600 font-bold text-sm w-full px-3 py-2 hover:bg-red-50 rounded-lg transition-colors">
+          <Link href="/login" className="flex items-center gap-3 text-red-600 font-bold text-sm w-full px-3 py-2 hover:bg-red-50 rounded-lg transition-colors">
             <LogOut size={18} /> Sign Out
-          </button>
+          </Link>
         </div>
       </aside>
 

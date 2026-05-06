@@ -15,6 +15,7 @@ const BookingPage = () => {
   const [selectedSlot, setSelectedSlot] = useState('');
   const [selectedAddress, setSelectedAddress] = useState(0);
   const [selectedPayment, setSelectedPayment] = useState('online');
+  const [isProcessing, setIsProcessing] = useState(false);
 
   useEffect(() => {
     setIsClient(true);
@@ -35,8 +36,13 @@ const BookingPage = () => {
   const slots = ['09:00 AM', '11:00 AM', '02:00 PM', '04:00 PM', '06:00 PM'];
 
   const handleBookingConfirm = () => {
-    clearCart();
-    setStep(4);
+    setIsProcessing(true);
+    // Simulate Payment API Call
+    setTimeout(() => {
+      setIsProcessing(false);
+      clearCart();
+      setStep(4);
+    }, 2000);
   };
 
   if (!isClient) return null;
@@ -243,8 +249,17 @@ const BookingPage = () => {
                   </div>
 
                   <div>
-                    <button onClick={handleBookingConfirm} className="w-full md:w-auto px-8 py-3 bg-black text-white font-semibold rounded-lg hover:bg-gray-800 transition-colors">
-                      Place Order
+                    <button 
+                      disabled={isProcessing}
+                      onClick={handleBookingConfirm} 
+                      className="w-full md:w-auto px-8 py-3 bg-black text-white font-semibold rounded-lg hover:bg-gray-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                    >
+                      {isProcessing ? (
+                        <>
+                          <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                          Processing Payment...
+                        </>
+                      ) : 'Place Order'}
                     </button>
                   </div>
                 </div>
