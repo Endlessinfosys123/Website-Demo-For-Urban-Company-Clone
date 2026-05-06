@@ -1,21 +1,20 @@
 'use client';
 
 import React from 'react';
-import { motion } from 'framer-motion';
 import { 
   ShoppingBag, Wallet, CreditCard, 
   MapPin, Settings, HelpCircle, 
-  ChevronRight, Star, Clock, CheckCircle2 
+  ChevronRight, Star, Clock 
 } from 'lucide-react';
-import { Card, Button, Badge } from '@/components/shared/DesignSystem';
 import Link from 'next/link';
+import { Badge } from '@/components/shared/DesignSystem';
 
 const CustomerDashboard = () => {
   const stats = [
-    { label: 'Active Bookings', value: '2', icon: <ShoppingBag className="text-blue-600" />, color: 'bg-blue-50' },
-    { label: 'Wallet Balance', value: '₹1,250', icon: <Wallet className="text-green-600" />, color: 'bg-green-50' },
-    { label: 'UC Points', value: '450', icon: <Star className="text-amber-500" />, color: 'bg-amber-50' },
-    { label: 'Total Spent', value: '₹12.4k', icon: <CreditCard className="text-purple-600" />, color: 'bg-purple-50' },
+    { label: 'Active Bookings', value: '2', icon: <ShoppingBag size={20} className="text-black" /> },
+    { label: 'Wallet Balance', value: '₹1,250', icon: <Wallet size={20} className="text-black" /> },
+    { label: 'UC Points', value: '450', icon: <Star size={20} className="text-black" /> },
+    { label: 'Total Spent', value: '₹12.4k', icon: <CreditCard size={20} className="text-black" /> },
   ];
 
   const recentBookings = [
@@ -38,165 +37,154 @@ const CustomerDashboard = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-slate-50/50">
+    <div className="min-h-screen bg-gray-50 pt-20">
       {/* Top Header */}
-      <div className="bg-white border-b border-slate-100 sticky top-0 z-40 px-10 py-6 flex items-center justify-between">
-        <div className="flex items-center gap-6">
-          <Link href="/" className="text-2xl font-black tracking-tighter">
-            URBAN<span className="text-primary">CLONE</span>
-          </Link>
-          <div className="w-px h-8 bg-slate-100 hidden md:block" />
-          <p className="text-sm font-bold text-slate-500 hidden md:block">Welcome back, <span className="text-slate-900">Aryan</span></p>
-        </div>
-        <div className="flex items-center gap-6">
-          <button className="p-3 hover:bg-slate-50 rounded-2xl transition-colors relative">
-            <HelpCircle size={24} className="text-slate-400" />
-            <div className="absolute top-3 right-3 w-2 h-2 bg-primary rounded-full" />
-          </button>
-          <div className="w-12 h-12 rounded-2xl bg-primary text-white flex items-center justify-center font-black text-lg">
-            A
+      <div className="bg-white border-b border-gray-200 px-4 py-4 flex items-center justify-between">
+        <div className="max-w-6xl mx-auto w-full flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <h1 className="text-2xl font-bold text-black tracking-tight">
+              My Account
+            </h1>
+          </div>
+          <div className="flex items-center gap-4">
+            <button className="text-gray-500 hover:text-black transition-colors">
+              <HelpCircle size={24} />
+            </button>
+            <div className="w-10 h-10 rounded-full bg-black text-white flex items-center justify-center font-bold">
+              A
+            </div>
           </div>
         </div>
       </div>
 
-      <main className="container mx-auto px-10 py-16">
-        {/* Hero Section */}
-        <div className="mb-16">
-          <h1 className="text-5xl font-black mb-4 tracking-tighter">My Account</h1>
-          <p className="text-slate-500 font-bold text-lg">Manage your bookings, wallet, and settings.</p>
-        </div>
-
+      <main className="max-w-6xl mx-auto px-4 py-8">
+        
         {/* Stats Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 mb-16">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
           {stats.map((stat, i) => (
-            <Card key={i} className="p-10 border-none shadow-xl">
-              <div className="flex justify-between items-start mb-8">
-                <div className={cn("p-5 rounded-[24px]", stat.color)}>
+            <div key={i} className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm flex flex-col justify-between">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-10 h-10 rounded-lg bg-gray-100 flex items-center justify-center">
                   {stat.icon}
                 </div>
+                <p className="text-gray-500 text-sm font-semibold">{stat.label}</p>
               </div>
-              <p className="text-slate-400 text-xs font-black uppercase tracking-widest mb-2">{stat.label}</p>
-              <h3 className="text-4xl font-black text-slate-900">{stat.value}</h3>
-            </Card>
+              <h3 className="text-2xl font-bold text-black">{stat.value}</h3>
+            </div>
           ))}
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-16">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Main Content: Recent Bookings */}
-          <div className="lg:col-span-2 space-y-10">
-            <div className="flex items-center justify-between">
-              <h2 className="text-3xl font-black tracking-tight">Active Bookings</h2>
-              <Link href="/customer/orders" className="text-primary font-black text-sm hover:underline flex items-center gap-2">
-                View History <ChevronRight size={16} />
-              </Link>
+          <div className="lg:col-span-2 space-y-6">
+            <div className="bg-white border border-gray-200 rounded-xl overflow-hidden shadow-sm">
+              <div className="px-6 py-4 border-b border-gray-200 flex items-center justify-between">
+                <h2 className="text-lg font-bold text-black">Active Bookings</h2>
+                <Link href="/customer/orders" className="text-sm font-semibold text-gray-500 hover:text-black">
+                  View History
+                </Link>
+              </div>
+
+              <div className="divide-y divide-gray-100">
+                {recentBookings.map((booking, i) => (
+                  <div key={i} className="p-6 hover:bg-gray-50 transition-colors flex flex-col sm:flex-row gap-6 justify-between items-start sm:items-center">
+                    <div className="flex gap-4">
+                      <div className="w-16 h-16 rounded-lg bg-gray-100 flex items-center justify-center shrink-0">
+                        <Clock size={24} className="text-gray-500" />
+                      </div>
+                      <div>
+                        <div className="flex items-center gap-2 mb-1">
+                          <span className="text-black font-bold">{booking.service}</span>
+                          <Badge variant={booking.status === 'In Progress' ? 'info' : 'success'}>
+                            {booking.status}
+                          </Badge>
+                        </div>
+                        <p className="text-sm text-gray-500 font-medium mb-1">{booking.date} • {booking.id}</p>
+                        <p className="text-xs text-gray-400 font-medium">Assigned to: {booking.pro}</p>
+                      </div>
+                    </div>
+                    
+                    <div className="flex flex-col sm:items-end gap-3 w-full sm:w-auto">
+                      <p className="font-bold text-black">{booking.price}</p>
+                      <button className="w-full sm:w-auto px-4 py-2 border border-gray-300 text-black font-semibold text-sm rounded-lg hover:bg-gray-50 transition-colors">
+                        View Details
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
 
-            {recentBookings.map((booking, i) => (
-              <Card key={i} className="p-10 border-none group cursor-pointer">
-                <div className="flex flex-col md:flex-row md:items-center justify-between gap-10">
-                  <div className="flex gap-8">
-                    <div className="w-24 h-24 rounded-[32px] bg-slate-900 flex items-center justify-center text-white shrink-0">
-                      <Clock size={32} />
-                    </div>
-                    <div>
-                      <div className="flex items-center gap-3 mb-2">
-                        <Badge variant={booking.status === 'In Progress' ? 'info' : 'success'}>
-                          {booking.status}
-                        </Badge>
-                        <span className="text-slate-300 font-bold text-xs">{booking.id}</span>
-                      </div>
-                      <h4 className="text-2xl font-black mb-1">{booking.service}</h4>
-                      <p className="text-slate-500 font-bold flex items-center gap-2">
-                        <MapPin size={14} /> South Extension, Delhi
-                      </p>
-                    </div>
-                  </div>
-                  
-                  <div className="flex items-center gap-10 border-t md:border-t-0 md:border-l border-slate-100 pt-8 md:pt-0 md:pl-10">
-                    <div className="text-right hidden md:block">
-                      <p className="text-slate-400 text-[10px] font-black uppercase tracking-widest mb-1">Scheduled For</p>
-                      <p className="font-black text-slate-900">{booking.date}</p>
-                    </div>
-                    <Button variant="outline" className="group-hover:border-primary group-hover:text-primary">
-                      Track Pro
-                    </Button>
-                  </div>
-                </div>
-              </Card>
-            ))}
-
             {/* Quick Actions */}
-            <div className="pt-10">
-              <h2 className="text-3xl font-black mb-10 tracking-tight">Quick Actions</h2>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div>
+              <h2 className="text-lg font-bold text-black mb-4">Quick Actions</h2>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 {[
-                  { title: 'Manage Address', desc: 'Add or edit service addresses', icon: <MapPin /> },
-                  { title: 'Payment Methods', desc: 'Securely manage your cards', icon: <CreditCard /> },
-                  { title: 'Account Settings', desc: 'Update profile and privacy', icon: <Settings /> },
+                  { title: 'Manage Addresses', icon: <MapPin size={20} /> },
+                  { title: 'Payment Methods', icon: <CreditCard size={20} /> },
+                  { title: 'Settings', icon: <Settings size={20} /> },
                 ].map((action, i) => (
-                  <Card key={i} className="p-8 hover:bg-slate-900 group transition-all duration-500">
-                    <div className="w-14 h-14 rounded-2xl bg-slate-50 flex items-center justify-center mb-6 group-hover:bg-primary group-hover:text-white transition-colors">
+                  <button key={i} className="bg-white p-4 border border-gray-200 rounded-xl hover:shadow-sm transition-all flex items-center gap-4 text-left">
+                    <div className="w-10 h-10 rounded-lg bg-gray-100 flex items-center justify-center shrink-0 text-black">
                       {action.icon}
                     </div>
-                    <h4 className="text-xl font-black mb-2 group-hover:text-white">{action.title}</h4>
-                    <p className="text-sm text-slate-500 font-bold group-hover:text-slate-400">{action.desc}</p>
-                  </Card>
+                    <span className="font-semibold text-black text-sm">{action.title}</span>
+                  </button>
                 ))}
               </div>
             </div>
           </div>
 
           {/* Sidebar: Profile Summary */}
-          <div className="space-y-10">
-            <Card className="p-10 bg-slate-900 text-white border-none overflow-hidden relative">
-              <div className="relative z-10">
-                <div className="w-24 h-24 rounded-[32px] bg-primary mb-8 border-4 border-white/10 flex items-center justify-center text-4xl font-black">
+          <div className="space-y-6">
+            <div className="bg-white p-6 border border-gray-200 rounded-xl shadow-sm">
+              <div className="flex items-center gap-4 mb-6">
+                <div className="w-16 h-16 rounded-full bg-gray-100 flex items-center justify-center text-xl font-bold text-black">
                   A
                 </div>
-                <h3 className="text-3xl font-black mb-2">Aryan Sharma</h3>
-                <p className="text-slate-400 font-bold mb-10">Premium Member since 2024</p>
-                
-                <div className="space-y-6 mb-10">
-                  <div className="flex justify-between items-center py-4 border-b border-white/5">
-                    <span className="text-slate-400 font-bold">Email</span>
-                    <span className="font-black">aryan@example.com</span>
-                  </div>
-                  <div className="flex justify-between items-center py-4 border-b border-white/5">
-                    <span className="text-slate-400 font-bold">Phone</span>
-                    <span className="font-black">+91 98765 43210</span>
-                  </div>
+                <div>
+                  <h3 className="font-bold text-black text-lg">Aryan Sharma</h3>
+                  <p className="text-gray-500 text-sm font-medium">+91 98765 43210</p>
                 </div>
-
-                <Button variant="secondary" className="w-full py-6">
-                  Edit Profile
-                </Button>
               </div>
               
-              {/* Decorative Circle */}
-              <div className="absolute -bottom-20 -right-20 w-64 h-64 bg-primary/20 rounded-full blur-3xl" />
-            </Card>
-
-            <Card className="p-10 border-none bg-indigo-50/50">
-              <h4 className="text-xl font-black mb-6 flex items-center gap-3">
-                <Star className="text-amber-500" fill="currentColor" /> Refer & Earn
-              </h4>
-              <p className="text-slate-600 font-bold text-sm leading-relaxed mb-8">
-                Invite your friends to UrbanClone and get ₹200 off on your next booking!
-              </p>
-              <div className="bg-white p-4 rounded-2xl border border-indigo-100 flex items-center justify-between mb-8">
-                <span className="font-black text-indigo-600 tracking-widest">UC_ARYAN_200</span>
-                <button className="text-xs font-black uppercase text-slate-400 hover:text-primary">Copy</button>
+              <div className="space-y-4 mb-6 text-sm">
+                <div className="flex justify-between items-center py-2 border-b border-gray-100">
+                  <span className="text-gray-500 font-medium">Email</span>
+                  <span className="font-semibold text-black">aryan@example.com</span>
+                </div>
+                <div className="flex justify-between items-center py-2 border-b border-gray-100">
+                  <span className="text-gray-500 font-medium">Member Since</span>
+                  <span className="font-semibold text-black">2024</span>
+                </div>
               </div>
-              <Button className="w-full bg-indigo-600">Invite Now</Button>
-            </Card>
+
+              <button className="w-full py-2 bg-white border border-gray-300 text-black font-semibold rounded-lg text-sm hover:bg-gray-50 transition-colors">
+                Edit Profile
+              </button>
+            </div>
+
+            <div className="bg-white p-6 border border-gray-200 rounded-xl shadow-sm">
+              <div className="flex items-center gap-2 mb-2">
+                <Star className="text-yellow-500" size={20} fill="currentColor" />
+                <h4 className="font-bold text-black text-lg">Refer & Earn</h4>
+              </div>
+              <p className="text-gray-600 text-sm leading-relaxed mb-4">
+                Invite your friends and get ₹200 off your next booking!
+              </p>
+              <div className="bg-gray-50 p-3 rounded-lg border border-gray-200 flex items-center justify-between mb-4">
+                <span className="font-bold text-black tracking-wide text-sm">UC_ARYAN_200</span>
+                <button className="text-xs font-bold text-gray-500 hover:text-black">COPY</button>
+              </div>
+              <button className="w-full py-2 bg-black text-white font-semibold rounded-lg text-sm hover:bg-gray-800 transition-colors">
+                Share Link
+              </button>
+            </div>
           </div>
         </div>
       </main>
     </div>
   );
 };
-
-// Helper for class merging (already in DesignSystem, but needed for local use if not exported properly)
-const cn = (...classes: any[]) => classes.filter(Boolean).join(' ');
 
 export default CustomerDashboard;

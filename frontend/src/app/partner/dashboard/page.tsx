@@ -1,22 +1,18 @@
 'use client';
 
 import React from 'react';
-import { motion } from 'framer-motion';
 import { 
-  Zap, TrendingUp, Users, 
-  Award, Calendar, DollarSign,
-  ChevronRight, ArrowUpRight, 
-  MapPin, Clock, Star
+  DollarSign, Star, Zap, Award, 
+  Users, MapPin, TrendingUp, Calendar 
 } from 'lucide-react';
-import { Card, Button, Badge } from '@/components/shared/DesignSystem';
-import Link from 'next/link';
+import { Badge } from '@/components/shared/DesignSystem';
 
 const PartnerDashboard = () => {
   const stats = [
-    { label: 'Total Earnings', value: '₹42,850', trend: '+12%', icon: <DollarSign className="text-green-600" />, color: 'bg-green-50' },
-    { label: 'Avg Rating', value: '4.9', trend: 'Stable', icon: <Star className="text-amber-500" />, color: 'bg-amber-50' },
-    { label: 'Jobs Done', value: '156', trend: '+8', icon: <Zap className="text-blue-600" />, color: 'bg-blue-50' },
-    { label: 'Level', value: 'Gold', trend: 'Next: Platinum', icon: <Award className="text-purple-600" />, color: 'bg-purple-50' },
+    { label: 'Total Earnings', value: '₹42,850', trend: '+12%', icon: <DollarSign size={20} className="text-black" /> },
+    { label: 'Avg Rating', value: '4.9', trend: 'Stable', icon: <Star size={20} className="text-black" /> },
+    { label: 'Jobs Done', value: '156', trend: '+8', icon: <Zap size={20} className="text-black" /> },
+    { label: 'Level', value: 'Gold', trend: 'Next: Platinum', icon: <Award size={20} className="text-black" /> },
   ];
 
   const upcomingJobs = [
@@ -39,163 +35,155 @@ const PartnerDashboard = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-slate-950 text-white pb-24">
+    <div className="min-h-screen bg-gray-50 pt-20">
       {/* Top Navbar */}
-      <nav className="border-b border-white/5 bg-slate-950/50 backdrop-blur-xl sticky top-0 z-50 px-10 py-6 flex items-center justify-between">
-        <div className="flex items-center gap-6">
-          <h1 className="text-xl font-black tracking-tighter">PARTNER<span className="text-primary">PORTAL</span></h1>
-          <Badge variant="success" className="bg-green-500/20 text-green-400 border border-green-500/20">ONLINE</Badge>
-        </div>
-        <div className="flex items-center gap-8">
-          <div className="hidden md:flex flex-col items-end">
-            <p className="text-xs font-black text-slate-500 uppercase tracking-widest">Next Payout</p>
-            <p className="font-black text-primary">Monday, 12 May</p>
+      <nav className="bg-white border-b border-gray-200 px-4 py-4 flex items-center justify-between">
+        <div className="max-w-6xl mx-auto w-full flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <h1 className="text-2xl font-bold text-black tracking-tight">Partner Portal</h1>
+            <Badge variant="success">Online</Badge>
           </div>
-          <div className="w-12 h-12 rounded-2xl bg-white/10 flex items-center justify-center border border-white/10">
-            <Users size={20} />
+          <div className="flex items-center gap-6">
+            <div className="hidden md:block text-right">
+              <p className="text-xs text-gray-500 font-semibold uppercase tracking-wider">Next Payout</p>
+              <p className="font-bold text-black text-sm">Mon, 12 May</p>
+            </div>
+            <div className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center border border-gray-200 text-black">
+              <Users size={18} />
+            </div>
           </div>
         </div>
       </nav>
 
-      <main className="container mx-auto px-10 py-16">
-        <div className="flex flex-col lg:flex-row justify-between items-start lg:items-end mb-16 gap-10">
+      <main className="max-w-6xl mx-auto px-4 py-8">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-8 gap-4">
           <div>
-            <span className="text-primary font-black uppercase tracking-[0.3em] text-[10px] mb-4 block">Performance Overview</span>
-            <h2 className="text-5xl md:text-6xl font-black tracking-tighter">Good morning, <br /><span className="text-slate-400">Sunil Electricals.</span></h2>
+            <h2 className="text-3xl font-bold text-black">Good morning, <br />Sunil Electricals.</h2>
           </div>
-          <div className="flex gap-4 w-full lg:w-auto">
-            <Button variant="secondary" className="flex-1 lg:flex-none py-6 px-10 rounded-[24px]">
+          <div className="flex gap-3 w-full md:w-auto">
+            <button className="flex-1 md:flex-none py-2 px-6 border border-gray-300 bg-white text-black font-semibold rounded-lg hover:bg-gray-50 transition-colors text-sm">
               Go Offline
-            </Button>
-            <Button className="flex-1 lg:flex-none py-6 px-10 rounded-[24px] bg-white text-slate-950 hover:bg-slate-200">
+            </button>
+            <button className="flex-1 md:flex-none py-2 px-6 bg-black text-white font-semibold rounded-lg hover:bg-gray-800 transition-colors text-sm">
               View Earnings
-            </Button>
+            </button>
           </div>
         </div>
 
         {/* Stats Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 mb-20">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
           {stats.map((stat, i) => (
-            <Card key={i} className="bg-white/5 border-white/10 p-10 hover:bg-white/10" hover={true}>
-              <div className="flex justify-between items-start mb-10">
-                <div className={cn("p-5 rounded-[24px] bg-white/5", stat.color.replace('bg-', 'text-'))}>
+            <div key={i} className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm flex flex-col justify-between">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-10 h-10 rounded-lg bg-gray-100 flex items-center justify-center">
                   {stat.icon}
                 </div>
-                <div className="flex items-center gap-1 text-green-400 text-xs font-black">
-                   {stat.trend} <ArrowUpRight size={14} />
-                </div>
+                <p className="text-gray-500 text-sm font-semibold">{stat.label}</p>
               </div>
-              <p className="text-slate-500 text-[10px] font-black uppercase tracking-widest mb-2">{stat.label}</p>
-              <h3 className="text-4xl font-black text-white">{stat.value}</h3>
-            </Card>
+              <div>
+                <h3 className="text-2xl font-bold text-black mb-1">{stat.value}</h3>
+                <p className="text-xs font-semibold text-green-600">{stat.trend}</p>
+              </div>
+            </div>
           ))}
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-16">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Today's Schedule */}
-          <div className="lg:col-span-2 space-y-10">
-            <div className="flex items-center justify-between">
-              <h3 className="text-3xl font-black tracking-tight">Today's Schedule</h3>
-              <p className="text-slate-500 font-bold">2 Jobs Scheduled</p>
-            </div>
+          <div className="lg:col-span-2 space-y-6">
+            <div className="bg-white border border-gray-200 rounded-xl overflow-hidden shadow-sm">
+              <div className="px-6 py-4 border-b border-gray-200 flex items-center justify-between">
+                <h3 className="text-lg font-bold text-black">Today's Schedule</h3>
+                <p className="text-sm font-semibold text-gray-500">2 Jobs</p>
+              </div>
 
-            <div className="space-y-8">
-              {upcomingJobs.map((job, i) => (
-                <Card key={i} className="bg-white/5 border-white/10 p-10 group overflow-hidden relative">
-                  {/* Progress Line */}
-                  <div className="absolute left-0 top-0 bottom-0 w-2 bg-primary opacity-0 group-hover:opacity-100 transition-opacity" />
-                  
-                  <div className="flex flex-col md:flex-row md:items-center justify-between gap-10 relative z-10">
-                    <div className="flex gap-8">
-                      <div className="w-20 h-20 rounded-[28px] bg-slate-900 border border-white/10 flex flex-col items-center justify-center shrink-0">
-                        <p className="text-[10px] font-black text-slate-500 uppercase">Start</p>
-                        <p className="text-xl font-black text-primary">{job.time.split(' ')[0]}</p>
+              <div className="divide-y divide-gray-100">
+                {upcomingJobs.map((job, i) => (
+                  <div key={i} className="p-6 flex flex-col md:flex-row gap-6 justify-between items-start md:items-center hover:bg-gray-50 transition-colors">
+                    <div className="flex gap-4">
+                      <div className="w-16 h-16 rounded-lg bg-gray-100 border border-gray-200 flex flex-col items-center justify-center shrink-0">
+                        <p className="text-[10px] font-bold text-gray-500 uppercase">Start</p>
+                        <p className="text-sm font-bold text-black">{job.time.split(' ')[0]}</p>
                       </div>
                       <div>
-                        <div className="flex items-center gap-3 mb-2">
-                           <Badge className="bg-primary/20 text-primary border border-primary/20">Upcoming</Badge>
-                           <span className="text-slate-600 font-bold text-xs">{job.id}</span>
+                        <div className="flex items-center gap-2 mb-1">
+                           <Badge variant="info">Upcoming</Badge>
+                           <span className="text-gray-500 font-bold text-xs">{job.id}</span>
                         </div>
-                        <h4 className="text-2xl font-black mb-3">{job.service}</h4>
-                        <div className="flex flex-wrap gap-6 text-slate-400 font-bold text-sm">
-                          <p className="flex items-center gap-2"><Users size={16} className="text-slate-600" /> {job.customer}</p>
-                          <p className="flex items-center gap-2"><MapPin size={16} className="text-slate-600" /> {job.location}</p>
+                        <h4 className="text-lg font-bold text-black mb-2">{job.service}</h4>
+                        <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 text-gray-600 text-sm">
+                          <p className="flex items-center gap-1"><Users size={14} /> {job.customer}</p>
+                          <p className="flex items-center gap-1"><MapPin size={14} /> {job.location}</p>
                         </div>
                       </div>
                     </div>
 
-                    <div className="flex flex-col items-end gap-6 border-t md:border-t-0 md:border-l border-white/5 pt-8 md:pt-0 md:pl-10">
-                      <div className="text-right">
-                        <p className="text-slate-500 text-[10px] font-black uppercase tracking-widest mb-1">Estimated Payout</p>
-                        <p className="text-3xl font-black text-green-400">{job.payout}</p>
+                    <div className="flex flex-col md:items-end gap-3 w-full md:w-auto">
+                      <div className="md:text-right">
+                        <p className="text-gray-500 text-[10px] font-bold uppercase tracking-widest">Est. Payout</p>
+                        <p className="text-lg font-bold text-green-600">{job.payout}</p>
                       </div>
-                      <Button className="w-full md:w-auto bg-white text-slate-950 font-black px-10">
+                      <button className="w-full md:w-auto px-6 py-2 bg-black text-white font-semibold rounded-lg text-sm hover:bg-gray-800 transition-colors">
                         Start Job
-                      </Button>
+                      </button>
                     </div>
                   </div>
-                </Card>
-              ))}
+                ))}
+              </div>
             </div>
           </div>
 
           {/* New Leads / Alerts */}
-          <div className="space-y-10">
-            <Card className="bg-primary p-10 border-none relative overflow-hidden">
-              <div className="relative z-10">
-                <div className="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center mb-8">
-                  <TrendingUp size={32} />
-                </div>
-                <h3 className="text-2xl font-black mb-4">Lead Center</h3>
-                <p className="text-white/70 font-bold mb-10 leading-relaxed">
-                  There are 5 new service requests in your area matching your expertise.
-                </p>
-                <Button className="w-full bg-white text-primary py-6">
-                  Check Available Leads
-                </Button>
+          <div className="space-y-6">
+            <div className="bg-black text-white p-6 rounded-xl shadow-sm">
+              <div className="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center mb-4">
+                <TrendingUp size={20} />
               </div>
-              <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full translate-x-1/2 -translate-y-1/2 blur-2xl" />
-            </Card>
+              <h3 className="text-lg font-bold mb-2">Lead Center</h3>
+              <p className="text-white/70 text-sm leading-relaxed mb-6">
+                There are 5 new service requests in your area matching your expertise.
+              </p>
+              <button className="w-full bg-white text-black font-bold py-2 rounded-lg text-sm hover:bg-gray-100 transition-colors">
+                View Available Leads
+              </button>
+            </div>
 
-            <Card className="bg-white/5 border-white/10 p-10">
-              <h4 className="text-xl font-black mb-8 flex items-center gap-3">
-                <Calendar className="text-purple-500" /> Availability
+            <div className="bg-white border border-gray-200 p-6 rounded-xl shadow-sm">
+              <h4 className="text-base font-bold text-black mb-4 flex items-center gap-2">
+                <Calendar size={18} className="text-black" /> Availability
               </h4>
-              <div className="grid grid-cols-7 gap-3 mb-10">
+              <div className="grid grid-cols-7 gap-2 mb-6">
                 {['M', 'T', 'W', 'T', 'F', 'S', 'S'].map((day, i) => (
-                  <div key={i} className={cn(
-                    "aspect-square rounded-xl flex items-center justify-center font-black text-xs transition-all cursor-pointer border",
-                    i < 5 ? "bg-primary border-primary text-white" : "bg-white/5 border-white/10 text-slate-500"
-                  )}>
+                  <div key={i} className={`aspect-square rounded-lg flex items-center justify-center font-bold text-xs border ${
+                    i < 5 ? 'bg-black border-black text-white' : 'bg-gray-50 border-gray-200 text-gray-500'
+                  }`}>
                     {day}
                   </div>
                 ))}
               </div>
-              <Button variant="outline" className="w-full border-white/10 text-white hover:bg-white/5 py-5">
+              <button className="w-full border border-gray-300 text-black font-semibold hover:bg-gray-50 py-2 rounded-lg text-sm transition-colors">
                 Manage Calendar
-              </Button>
-            </Card>
-
-            <Card className="bg-slate-900 border-white/5 p-10 text-center">
-              <div className="w-20 h-20 rounded-[32px] bg-amber-500/10 text-amber-500 flex items-center justify-center mx-auto mb-6">
-                <Award size={40} />
+              </button>
+            </div>
+            
+            <div className="bg-white border border-gray-200 p-6 rounded-xl shadow-sm text-center">
+              <div className="w-12 h-12 rounded-full bg-yellow-50 text-yellow-500 flex items-center justify-center mx-auto mb-4">
+                <Award size={24} />
               </div>
-              <h4 className="text-xl font-black mb-2">Pro Training</h4>
-              <p className="text-slate-500 font-bold text-sm mb-8">Complete 2 more modules to reach Platinum level.</p>
-              <div className="w-full h-2 bg-white/5 rounded-full mb-10">
-                <div className="w-[75%] h-full bg-amber-500 rounded-full" />
+              <h4 className="text-base font-bold text-black mb-1">Pro Training</h4>
+              <p className="text-gray-500 text-xs font-semibold mb-4">Complete 2 modules for Platinum level.</p>
+              <div className="w-full h-2 bg-gray-100 rounded-full mb-6">
+                <div className="w-[75%] h-full bg-yellow-500 rounded-full" />
               </div>
-              <Button variant="ghost" className="w-full text-slate-400 font-black">
+              <button className="w-full text-gray-600 font-bold hover:text-black transition-colors text-sm">
                 Open Academy
-              </Button>
-            </Card>
+              </button>
+            </div>
           </div>
         </div>
       </main>
     </div>
   );
 };
-
-const cn = (...classes: any[]) => classes.filter(Boolean).join(' ');
 
 export default PartnerDashboard;
